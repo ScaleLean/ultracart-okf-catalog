@@ -1,7 +1,7 @@
 ---
 type: "BigQuery Dataset"
 title: "ultracart_dw_high"
-description: "Higher-access current-state view layer with expanded fields on some objects."
+description: "Level 4 high current-state view layer with the most restricted affiliate and wholesale customer identifiers."
 resource: "urn:ultracart:bigquery:dataset:ultracart_dw_high"
 tags:
   - "ultracart"
@@ -13,7 +13,7 @@ timestamp: "2026-07-01T00:00:00Z"
 
 # ultracart_dw_high
 
-Higher-access current-state view layer with expanded fields on some objects.
+Level 4 high current-state view layer with the most restricted affiliate and wholesale customer identifiers.
 
 ## Object Counts
 

@@ -36,11 +36,13 @@ Docs-inspired examples mined from the public UltraCart Data Warehouse documentat
 The files use placeholders:
 
 - `{{ source_project }}` - merchant UltraCart BigQuery project.
-- `{{ access_dataset }}` - access layer, normally `ultracart_dw_medium`.
+- `{{ access_dataset }}` - current-state access layer, often `ultracart_dw_medium`; use the least-privileged layer that contains the required fields.
 - `{{ lookback_days }}` - bounded session lookback for partitioned behavior tables.
 - `{{ time_zone }}` - reporting time zone, normally `America/New_York`.
 - `{{ search_text }}` - text fragment for the upsell offer search example.
 - `{{ billing_project }}`, `{{ bq_region }}`, `{{ cost_start_date }}`, `{{ cost_end_date }}` - operations query-cost audit controls.
+
+Do not point these examples at `ultracart_dw_streaming` for ordinary reporting. Streaming tables are mutation logs, while `ultracart_dw`, `ultracart_dw_low`, `ultracart_dw_medium`, and `ultracart_dw_high` are current-state view layers. Parent accounts may also have linked-account datasets for consolidated reporting.
 
 Dry-run them against an accessible warehouse:
 

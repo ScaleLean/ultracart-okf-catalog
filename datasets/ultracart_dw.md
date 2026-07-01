@@ -1,7 +1,7 @@
 ---
 type: "BigQuery Dataset"
 title: "ultracart_dw"
-description: "Standard current-state redacted view layer over streaming tables."
+description: "Level 1 standard current-state view layer without sensitive fields."
 resource: "urn:ultracart:bigquery:dataset:ultracart_dw"
 tags:
   - "ultracart"
@@ -13,7 +13,7 @@ timestamp: "2026-07-01T00:00:00Z"
 
 # ultracart_dw
 
-Standard current-state redacted view layer over streaming tables.
+Level 1 standard current-state view layer without sensitive fields.
 
 ## Object Counts
 

@@ -5,27 +5,27 @@
     {
       "dataset": "ultracart_dw",
       "object_count": 44,
-      "role": "Standard current-state redacted view layer over streaming tables."
+      "role": "Level 1 standard current-state view layer without sensitive fields."
     },
     {
       "dataset": "ultracart_dw_low",
       "object_count": 43,
-      "role": "Lower-access current-state view layer for broad reporting use."
+      "role": "Level 2 low current-state view layer with additional affiliate fields, excluding highly restricted identifiers."
     },
     {
       "dataset": "ultracart_dw_medium",
       "object_count": 44,
-      "role": "Default analytics current-state view layer for most warehouse adapters."
+      "role": "Level 3 medium current-state view layer with customer PII fields."
     },
     {
       "dataset": "ultracart_dw_high",
       "object_count": 44,
-      "role": "Higher-access current-state view layer with expanded fields on some objects."
+      "role": "Level 4 high current-state view layer with the most restricted affiliate and wholesale customer identifiers."
     },
     {
       "dataset": "ultracart_dw_streaming",
       "object_count": 45,
-      "role": "Physical streaming layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation."
+      "role": "Physical streaming mutation layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation."
     },
     {
       "dataset": "ultracart_dw_dashboard",

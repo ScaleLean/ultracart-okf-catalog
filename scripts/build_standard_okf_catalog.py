@@ -18,15 +18,38 @@ EXCLUDED_STANDARD_DATASETS = {"_".join(["ultracart", "dw", "work"])}
 
 
 DATASET_ROLES = {
-    "ultracart_dw": "Standard current-state redacted view layer over streaming tables.",
-    "ultracart_dw_low": "Lower-access current-state view layer for broad reporting use.",
-    "ultracart_dw_medium": "Default analytics current-state view layer for most warehouse adapters.",
-    "ultracart_dw_high": "Higher-access current-state view layer with expanded fields on some objects.",
-    "ultracart_dw_streaming": "Physical streaming layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation.",
+    "ultracart_dw": "Level 1 standard current-state view layer without sensitive fields.",
+    "ultracart_dw_low": "Level 2 low current-state view layer with additional affiliate fields, excluding highly restricted identifiers.",
+    "ultracart_dw_medium": "Level 3 medium current-state view layer with customer PII fields.",
+    "ultracart_dw_high": "Level 4 high current-state view layer with the most restricted affiliate and wholesale customer identifiers.",
+    "ultracart_dw_streaming": "Physical streaming mutation layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation.",
     "ultracart_dw_dashboard": "UltraCart dashboard rollup and materialized summary layer.",
     "ultracart_dw_import": "Imported and legacy segmentation helper layer.",
     "ultracart_dw_ml": "Derived machine-learning and customer-scoring feature layer.",
 }
+
+
+WAREHOUSE_ACCESS_LAYERS = [
+    ("ultracart_dw", "Level 1 - Standard", "Current-state reporting views without sensitive information."),
+    (
+        "ultracart_dw_low",
+        "Level 2 - Low",
+        "Current-state reporting views with additional affiliate information while excluding highly restricted identifiers.",
+    ),
+    ("ultracart_dw_medium", "Level 3 - Medium", "Current-state reporting views with customer PII fields."),
+    (
+        "ultracart_dw_high",
+        "Level 4 - High",
+        "Current-state reporting views with the most restricted affiliate and wholesale customer identifiers.",
+    ),
+]
+
+LINKED_ACCESS_LAYERS = [
+    ("ultracart_dw_linked", "Level 1 - Standard", "Linked-account current-state reporting views."),
+    ("ultracart_dw_linked_low", "Level 2 - Low", "Linked-account low-access reporting views."),
+    ("ultracart_dw_linked_medium", "Level 3 - Medium", "Linked-account medium-access reporting views."),
+    ("ultracart_dw_linked_high", "Level 4 - High", "Linked-account high-access reporting views."),
+]
 
 
 TABLE_SEMANTICS = {
@@ -730,7 +753,7 @@ def write_reference_docs(
     field_counts: dict[tuple[str, str], dict[str, int]],
     fields_by_table: dict[str, list[dict[str, str]]],
 ) -> None:
-    write(out / "references" / "index.md", "# References\n\n- [Table families](/references/table_families.md)\n- [BigQuery usage patterns](/references/bigquery_usage.md)\n- [Monetary field patterns](/references/monetary_fields.md)\n- [Source coverage](/references/source_coverage.md)\n- [Sensitivity guardrails](/references/sensitivity_guardrails.md)\n")
+    write(out / "references" / "index.md", "# References\n\n- [Table families](/references/table_families.md)\n- [Warehouse access layers](/references/warehouse_layers.md)\n- [BigQuery usage patterns](/references/bigquery_usage.md)\n- [Monetary field patterns](/references/monetary_fields.md)\n- [Source coverage](/references/source_coverage.md)\n- [Sensitivity guardrails](/references/sensitivity_guardrails.md)\n")
     body = yaml_frontmatter(
         {
             "type": "Reference",
@@ -747,6 +770,43 @@ def write_reference_docs(
         body += f"## {family}\n\n{description}\n\nObjects in catalog: {counts.get(family, 0)}\n\n"
     body = body.rstrip() + "\n"
     write(out / "references" / "table_families.md", body)
+
+    body = yaml_frontmatter(
+        {
+            "type": "Reference",
+            "title": "Warehouse Access Layers",
+            "description": "Official UltraCart BigQuery dataset groups, access levels, and query implications.",
+            "resource": "urn:ultracart:okf:reference:warehouse-layers",
+            "tags": ["ultracart", "bigquery", "reference", "datasets", "access"],
+            "timestamp": GENERATED_AT,
+        }
+    )
+    body += "# Warehouse Access Layers\n\n"
+    body += "UltraCart BigQuery warehouses expose physical streaming tables plus current-state view datasets. For normal reporting, query the current-state view layer that matches the user's approved data access. Use the streaming layer only for freshness, delete behavior, or view-validation work.\n\n"
+    body += "Official UltraCart documentation: https://ultracart.atlassian.net/wiki/spaces/ucdoc/pages/994705409/Data+Warehouse+BigQuery\n\n"
+    body += "## Primary access layers\n\n"
+    body += "| Dataset | Access level | Reporting use |\n|---|---|---|\n"
+    for dataset, access_level, description in WAREHOUSE_ACCESS_LAYERS:
+        body += f"| `{dataset}` | {access_level} | {description} |\n"
+    body += "\n"
+    body += "`ultracart_dw_medium` is a practical default for many adapter and reporting examples because it includes customer fields used in lifecycle and attribution analysis. Use `ultracart_dw` or `ultracart_dw_low` when the analysis does not need those fields. Use `ultracart_dw_high` only when the restricted fields are explicitly approved and required.\n\n"
+    body += "## Linked-account layers\n\n"
+    body += "Parent accounts with linked UltraCart accounts can have parallel linked datasets for consolidated reporting across child accounts. These follow the same access-level pattern as the primary datasets, but should only be used when the business question explicitly asks for linked-account rollups.\n\n"
+    body += "| Dataset | Access level | Reporting use |\n|---|---|---|\n"
+    for dataset, access_level, description in LINKED_ACCESS_LAYERS:
+        body += f"| `{dataset}` | {access_level} | {description} |\n"
+    body += "\n"
+    body += "Linked datasets are not part of this standard catalog unless they are present in the metadata inventory used to generate a bundle.\n\n"
+    body += "## Streaming layer\n\n"
+    body += "`ultracart_dw_streaming` contains one row per object mutation. It is near-real-time, but it is not the safe grain for ordinary reports because multiple mutation rows can exist for the same business object. The current-state view layers collapse those mutations into the reporting snapshot and remove fields the user is not allowed to access.\n\n"
+    body += "## Query implications\n\n"
+    body += "- Access level changes the columns a user can see; verify live `INFORMATION_SCHEMA` or `bq show --schema` metadata before claiming a field is unavailable.\n"
+    body += "- When raw PII is restricted, use available hash fields for joins and deduplication when the business question does not require raw contact data.\n"
+    body += "- UltraCart BigQuery date-time values are UTC. Convert to the merchant's reporting time zone before grouping by business day, week, or hour.\n"
+    body += "- UltraCart records are nested hierarchical objects. Use `UNNEST` deliberately and preserve the intended grain to avoid multiplying orders, items, sessions, or affiliate events.\n"
+    body += "- Cross-project joins are supported by BigQuery when the querying principal has permission to all referenced projects and datasets.\n"
+    body += "- Helper datasets such as `ultracart_dw_dashboard`, `ultracart_dw_import`, and `ultracart_dw_ml` are implementation or derived layers. Start from the primary current-state datasets unless the use case specifically calls for those helpers.\n"
+    write(out / "references" / "warehouse_layers.md", body)
 
     body = yaml_frontmatter(
         {
@@ -786,11 +846,12 @@ def write_reference_docs(
         }
     )
     body += "# BigQuery Usage Patterns\n\n"
-    body += "Use the current-state view layers for normal analytics. Start with `ultracart_dw_medium` unless a lower or higher access layer is explicitly required.\n\n"
+    body += "Use the current-state view layers for normal analytics. Start with [Warehouse access layers](/references/warehouse_layers.md) to choose the least-privileged dataset that answers the business question. `ultracart_dw_medium` is a practical default for many lifecycle and attribution examples, but `ultracart_dw`, `ultracart_dw_low`, or `ultracart_dw_high` may be the right access layer depending on permissions and required fields.\n\n"
+    body += "UltraCart BigQuery records are nested hierarchical objects, not fully flattened relational tables. Use `UNNEST` deliberately, preserve the intended output grain, and convert UTC date-time fields into the merchant's reporting time zone before grouping by day, week, or hour.\n\n"
     body += "Prefer these source surfaces for common marts:\n\n"
     body += "- Orders: `uc_orders`\n- Order items: `uc_orders.items` joined to `uc_items` when item catalog enrichment is needed\n- Attribution: `uc_orders.utms` plus optional `uc_screen_recordings` URL and page-view parameters\n- Subscriptions: `uc_auto_orders`\n- Affiliate commissions: `uc_affiliate_ledgers` after freshness validation\n- Product/catalog: `uc_items`, `uc_storefront_pages`, and storefront/feed metadata fields\n\n"
     body += "For revenue, cost, refund, gift-certificate, surcharge, and other currency-aware values, start with [Monetary field patterns](/references/monetary_fields.md).\n\n"
-    body += "Avoid direct streaming-table queries unless validating freshness, delete behavior, or the view layer itself. Avoid row sampling in public artifacts.\n\n"
+    body += "Avoid direct streaming-table queries unless validating freshness, delete behavior, or the view layer itself. Streaming rows represent mutations, not one safe reporting row per business object. Avoid row sampling in public artifacts.\n\n"
     body += "## Sampling And Profiling\n\n"
     body += "A few current-state views can scan substantial underlying data even when returning only a handful of rows. When sampling or profiling, use explicit field lists plus date, partition, storefront, status, or business-key filters before querying these objects:\n\n"
     for table in sorted(EXPENSIVE_QUERY_OBJECTS):
@@ -832,6 +893,7 @@ def write_reference_docs(
     )
     body += "# Sensitivity Guardrails\n\n"
     body += "This public bundle is metadata-only. Do not add customer rows, raw emails, addresses, phone numbers, payment details, message bodies, sampled records, or merchant-specific project identifiers to this repository.\n\n"
+    body += "UltraCart warehouse access is permissioned through Google IAM plus BigQuery column-level security. Do not move an analysis to a broader access layer just to make fields easier to query; use the lowest access level that answers the question and prefer hashed identifiers when raw PII is not required.\n\n"
     body += "Generated merchant bundles should stay local unless explicitly reviewed for the intended audience.\n\n"
     body += "Treat row-level samples from these objects as especially sensitive, even in medium-layer views:\n\n"
     for table in sorted(HIGH_SENSITIVITY_OBJECTS):

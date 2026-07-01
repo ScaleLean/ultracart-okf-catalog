@@ -1,7 +1,7 @@
 ---
 type: "BigQuery Dataset"
 title: "ultracart_dw_low"
-description: "Lower-access current-state view layer for broad reporting use."
+description: "Level 2 low current-state view layer with additional affiliate fields, excluding highly restricted identifiers."
 resource: "urn:ultracart:bigquery:dataset:ultracart_dw_low"
 tags:
   - "ultracart"
@@ -13,7 +13,7 @@ timestamp: "2026-07-01T00:00:00Z"
 
 # ultracart_dw_low
 
-Lower-access current-state view layer for broad reporting use.
+Level 2 low current-state view layer with additional affiliate fields, excluding highly restricted identifiers.
 
 ## Object Counts
 

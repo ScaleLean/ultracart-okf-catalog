@@ -1,7 +1,7 @@
 ---
 type: "BigQuery Dataset"
 title: "ultracart_dw_medium"
-description: "Default analytics current-state view layer for most warehouse adapters."
+description: "Level 3 medium current-state view layer with customer PII fields."
 resource: "urn:ultracart:bigquery:dataset:ultracart_dw_medium"
 tags:
   - "ultracart"
@@ -13,7 +13,7 @@ timestamp: "2026-07-01T00:00:00Z"
 
 # ultracart_dw_medium
 
-Default analytics current-state view layer for most warehouse adapters.
+Level 3 medium current-state view layer with customer PII fields.
 
 ## Object Counts
 

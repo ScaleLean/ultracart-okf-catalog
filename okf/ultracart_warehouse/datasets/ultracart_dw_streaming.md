@@ -1,7 +1,7 @@
 ---
 type: "BigQuery Dataset"
 title: "ultracart_dw_streaming"
-description: "Physical streaming layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation."
+description: "Physical streaming mutation layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation."
 resource: "urn:ultracart:bigquery:dataset:ultracart_dw_streaming"
 tags:
   - "ultracart"
@@ -13,7 +13,7 @@ timestamp: "2026-07-01T00:00:00Z"
 
 # ultracart_dw_streaming
 
-Physical streaming layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation.
+Physical streaming mutation layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation.
 
 ## Object Counts
 

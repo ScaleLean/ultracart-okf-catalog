@@ -24,6 +24,8 @@ This repository follows the basic OKF adoption path:
 
 The repo also includes [reference BigQuery views](examples/bigquery_views/README.md) that act as practical OKF consumers: they show how an agent or analytics engineer can turn the bundle into safe, reusable base queries and marts.
 
+For dataset group selection, start with [warehouse access layers](references/warehouse_layers.md). It maps UltraCart's standard, low, medium, high, linked-account, and streaming layers to safe reporting use.
+
 Inspect and test the standard catalog with:
 
 ```sh
@@ -68,7 +70,7 @@ The tracked standard catalog and generated local bundles normally include:
 - `datasets/*.md` - one concept per discovered BigQuery dataset.
 - `tables/<dataset>/*.md` - one concept per discovered table, view, or materialized view.
 - `concepts/tables_by_name/*.md` - canonical table definitions across access layers.
-- `references/*.md` - generator, sensitivity, and source-metadata references.
+- `references/*.md` - warehouse access, usage, monetary field, sensitivity, and source-metadata references.
 - `downstream_views/<project>/` - optional downstream views that reference UltraCart-style sources.
 - `viz.html` - self-contained static viewer.
 

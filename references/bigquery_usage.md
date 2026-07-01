@@ -13,7 +13,9 @@ timestamp: "2026-07-01T00:00:00Z"
 
 # BigQuery Usage Patterns
 
-Use the current-state view layers for normal analytics. Start with `ultracart_dw_medium` unless a lower or higher access layer is explicitly required.
+Use the current-state view layers for normal analytics. Start with [Warehouse access layers](/references/warehouse_layers.md) to choose the least-privileged dataset that answers the business question. `ultracart_dw_medium` is a practical default for many lifecycle and attribution examples, but `ultracart_dw`, `ultracart_dw_low`, or `ultracart_dw_high` may be the right access layer depending on permissions and required fields.
+
+UltraCart BigQuery records are nested hierarchical objects, not fully flattened relational tables. Use `UNNEST` deliberately, preserve the intended output grain, and convert UTC date-time fields into the merchant's reporting time zone before grouping by day, week, or hour.
 
 Prefer these source surfaces for common marts:
 
@@ -26,7 +28,7 @@ Prefer these source surfaces for common marts:
 
 For revenue, cost, refund, gift-certificate, surcharge, and other currency-aware values, start with [Monetary field patterns](/references/monetary_fields.md).
 
-Avoid direct streaming-table queries unless validating freshness, delete behavior, or the view layer itself. Avoid row sampling in public artifacts.
+Avoid direct streaming-table queries unless validating freshness, delete behavior, or the view layer itself. Streaming rows represent mutations, not one safe reporting row per business object. Avoid row sampling in public artifacts.
 
 ## Sampling And Profiling
 

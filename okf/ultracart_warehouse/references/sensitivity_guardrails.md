@@ -15,6 +15,8 @@ timestamp: "2026-07-01T00:00:00Z"
 
 This public bundle is metadata-only. Do not add customer rows, raw emails, addresses, phone numbers, payment details, message bodies, sampled records, or merchant-specific project identifiers to this repository.
 
+UltraCart warehouse access is permissioned through Google IAM plus BigQuery column-level security. Do not move an analysis to a broader access layer just to make fields easier to query; use the lowest access level that answers the question and prefer hashed identifiers when raw PII is not required.
+
 Generated merchant bundles should stay local unless explicitly reviewed for the intended audience.
 
 Treat row-level samples from these objects as especially sensitive, even in medium-layer views:
