@@ -266,6 +266,37 @@ FAMILY_DESCRIPTIONS = {
     "ml": "Machine-learning feature, registry, monitoring, and scoring surfaces.",
 }
 
+EXPENSIVE_QUERY_OBJECTS = {
+    "uc_analytics_sessions",
+    "uc_cart_abandons",
+    "uc_screen_recording_heatmap_data",
+    "uc_screen_recordings",
+    "uc_storefront_customer_emails",
+    "uc_storefront_customers",
+    "uc_storefront_traffic_logs",
+}
+
+OPTIONAL_FEATURE_OBJECTS = {
+    "uc_affiliate_network_pixel_postback_logs",
+    "uc_affiliate_network_pixels",
+    "uc_conversation_agent_status_events",
+    "uc_conversation_pbx_calls",
+    "uc_conversations",
+    "uc_storefront_blog_posts",
+}
+
+HIGH_SENSITIVITY_OBJECTS = {
+    "uc_analytics_sessions",
+    "uc_cart_abandons",
+    "uc_customers",
+    "uc_orders",
+    "uc_screen_recordings",
+    "uc_storefront_customer_emails",
+    "uc_storefront_customers",
+    "uc_storefront_customer_sessions",
+    "uc_towerdata_email_intelligence",
+}
+
 PUBLIC_IDENTIFIER_REPLACEMENTS = [
     ("".join(chr(code) for code in [99, 108, 105, 110, 105, 99, 97, 108, 95, 101, 102, 102, 101, 99, 116, 115]), "merchant_site"),
     ("".join(chr(code) for code in [99, 108, 105, 110, 105, 99, 97, 108, 95, 101, 102, 102, 101, 99, 116]), "merchant_site"),
@@ -386,6 +417,24 @@ def object_type_label(object_type: str) -> str:
     return "BigQuery Object"
 
 
+def usage_notes(table: str) -> list[str]:
+    notes: list[str] = []
+    if table in EXPENSIVE_QUERY_OBJECTS:
+        notes.append(
+            "This object can be expensive to sample or profile. Use explicit field lists and date, "
+            "partition, storefront, or business-key filters before querying."
+        )
+    if table in OPTIONAL_FEATURE_OBJECTS:
+        notes.append(
+            "This standard object may be empty for merchants that do not use the related UltraCart module or feature."
+        )
+    if table in HIGH_SENSITIVITY_OBJECTS:
+        notes.append(
+            "Treat row-level data from this object as sensitive. Prefer hashed identifiers and do not publish row samples."
+        )
+    return notes
+
+
 def dataset_sort_key(value: str) -> tuple[int, str]:
     order = [
         "ultracart_dw",
@@ -410,6 +459,18 @@ def field_markdown(fields: list[dict[str, str]], limit: int | None = None) -> st
     if limit is not None and len(fields) > limit:
         lines.append(f"| ... | {len(fields) - limit} additional field paths omitted in this view |")
     return "\n".join(lines) + "\n"
+
+
+def monetary_field_parents(fields: list[dict[str, str]]) -> list[str]:
+    paths = {row["field_path"] for row in fields}
+    parents: list[str] = []
+    for path in paths:
+        if not path.endswith(".value"):
+            continue
+        parent = path.rsplit(".", 1)[0]
+        if f"{parent}.currency_code" in paths:
+            parents.append(parent)
+    return sorted(parents, key=str.lower)
 
 
 def public_identifier(value: str) -> str:
@@ -608,6 +669,11 @@ def write_table_docs(
                 body += field_markdown(candidate_fields)
             else:
                 body += "\n## Field Paths\n\nNo field-path rows were available in the local metadata evidence for this object.\n"
+            notes = usage_notes(obj.name)
+            if notes:
+                body += "\n## Usage Notes\n\n"
+                for note in notes:
+                    body += f"- {note}\n"
             body += "\n## Query Pattern\n\n"
             body += "```sql\n"
             body += f"SELECT\n  COUNT(1) AS row_count\nFROM `{{{{ source_project }}}}.{obj.dataset}.{obj.name}`;\n"
@@ -648,6 +714,11 @@ def write_canonical_docs(out: Path, by_name: dict[str, list[WarehouseObject]], f
         body += field_markdown(fields_by_table.get(name, []))
         body += "\n## Notes\n\n"
         body += "Treat the dataset-specific object doc as authoritative for access layer and object type. Treat this canonical definition as the cross-layer business definition for the UltraCart object name.\n"
+        notes = usage_notes(name)
+        if notes:
+            body += "\n"
+            for note in notes:
+                body += f"- {note}\n"
         write(out / "concepts" / "tables_by_name" / f"{slugify(name)}.md", body)
     write(out / "concepts" / "tables_by_name" / "index.md", "\n".join(index_lines) + "\n")
 
@@ -659,7 +730,7 @@ def write_reference_docs(
     field_counts: dict[tuple[str, str], dict[str, int]],
     fields_by_table: dict[str, list[dict[str, str]]],
 ) -> None:
-    write(out / "references" / "index.md", "# References\n\n- [Table families](/references/table_families.md)\n- [BigQuery usage patterns](/references/bigquery_usage.md)\n- [Source coverage](/references/source_coverage.md)\n- [Sensitivity guardrails](/references/sensitivity_guardrails.md)\n")
+    write(out / "references" / "index.md", "# References\n\n- [Table families](/references/table_families.md)\n- [BigQuery usage patterns](/references/bigquery_usage.md)\n- [Monetary field patterns](/references/monetary_fields.md)\n- [Source coverage](/references/source_coverage.md)\n- [Sensitivity guardrails](/references/sensitivity_guardrails.md)\n")
     body = yaml_frontmatter(
         {
             "type": "Reference",
@@ -680,6 +751,33 @@ def write_reference_docs(
     body = yaml_frontmatter(
         {
             "type": "Reference",
+            "title": "Monetary Field Patterns",
+            "description": "Currency-aware value fields discovered in UltraCart warehouse schemas.",
+            "resource": "urn:ultracart:okf:reference:monetary-fields",
+            "tags": ["ultracart", "bigquery", "reference", "money", "currency"],
+            "timestamp": GENERATED_AT,
+        }
+    )
+    body += "# Monetary Field Patterns\n\n"
+    body += "UltraCart monetary values are usually represented as a struct with `value`, `localized`, `localized_formatted`, `exchange_rate`, and `currency_code` fields. For analytics, prefer pairing the numeric `value` with its sibling `currency_code`; use `localized` or `localized_formatted` only when the reporting use case explicitly needs localized display amounts.\n\n"
+    money_by_table = {
+        table: monetary_field_parents(fields)
+        for table, fields in sorted(fields_by_table.items(), key=lambda item: item[0].lower())
+    }
+    money_by_table = {table: parents for table, parents in money_by_table.items() if parents}
+    body += f"Tables with currency-aware value structs: {len(money_by_table)}\n\n"
+    for table, parents in money_by_table.items():
+        body += f"## {table}\n\n"
+        body += f"Currency-aware value structs: {len(parents)}\n\n"
+        for parent in parents:
+            body += f"- `{parent}`\n"
+        body += "\n"
+    body = body.rstrip() + "\n"
+    write(out / "references" / "monetary_fields.md", body)
+
+    body = yaml_frontmatter(
+        {
+            "type": "Reference",
             "title": "BigQuery Usage Patterns",
             "description": "Safe usage patterns for querying the UltraCart warehouse from OKF concepts.",
             "resource": "urn:ultracart:okf:reference:bigquery-usage",
@@ -691,7 +789,15 @@ def write_reference_docs(
     body += "Use the current-state view layers for normal analytics. Start with `ultracart_dw_medium` unless a lower or higher access layer is explicitly required.\n\n"
     body += "Prefer these source surfaces for common marts:\n\n"
     body += "- Orders: `uc_orders`\n- Order items: `uc_orders.items` joined to `uc_items` when item catalog enrichment is needed\n- Attribution: `uc_orders.utms` plus optional `uc_screen_recordings` URL and page-view parameters\n- Subscriptions: `uc_auto_orders`\n- Affiliate commissions: `uc_affiliate_ledgers` after freshness validation\n- Product/catalog: `uc_items`, `uc_storefront_pages`, and storefront/feed metadata fields\n\n"
-    body += "Avoid direct streaming-table queries unless validating freshness, delete behavior, or the view layer itself. Avoid row sampling in public artifacts.\n"
+    body += "For revenue, cost, refund, gift-certificate, surcharge, and other currency-aware values, start with [Monetary field patterns](/references/monetary_fields.md).\n\n"
+    body += "Avoid direct streaming-table queries unless validating freshness, delete behavior, or the view layer itself. Avoid row sampling in public artifacts.\n\n"
+    body += "## Sampling And Profiling\n\n"
+    body += "A few current-state views can scan substantial underlying data even when returning only a handful of rows. When sampling or profiling, use explicit field lists plus date, partition, storefront, status, or business-key filters before querying these objects:\n\n"
+    for table in sorted(EXPENSIVE_QUERY_OBJECTS):
+        body += f"- `{table}`\n"
+    body += "\nStandard objects can also be present but empty when a merchant does not use a related UltraCart feature or module. Treat empty results as a feature-usage signal to verify, not as catalog breakage.\n\n"
+    for table in sorted(OPTIONAL_FEATURE_OBJECTS):
+        body += f"- `{table}`\n"
     write(out / "references" / "bigquery_usage.md", body)
 
     body = yaml_frontmatter(
@@ -726,7 +832,10 @@ def write_reference_docs(
     )
     body += "# Sensitivity Guardrails\n\n"
     body += "This public bundle is metadata-only. Do not add customer rows, raw emails, addresses, phone numbers, payment details, message bodies, sampled records, or merchant-specific project identifiers to this repository.\n\n"
-    body += "Generated merchant bundles should stay local unless explicitly reviewed for the intended audience.\n"
+    body += "Generated merchant bundles should stay local unless explicitly reviewed for the intended audience.\n\n"
+    body += "Treat row-level samples from these objects as especially sensitive, even in medium-layer views:\n\n"
+    for table in sorted(HIGH_SENSITIVITY_OBJECTS):
+        body += f"- `{table}`\n"
     write(out / "references" / "sensitivity_guardrails.md", body)
 
 
