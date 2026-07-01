@@ -1,0 +1,1523 @@
+{
+  "canonical_table_count": 112,
+  "dataset_count": 8,
+  "datasets": [
+    {
+      "dataset": "ultracart_dw",
+      "object_count": 44,
+      "role": "Standard current-state redacted view layer over streaming tables."
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "object_count": 43,
+      "role": "Lower-access current-state view layer for broad reporting use."
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "object_count": 44,
+      "role": "Default analytics current-state view layer for most warehouse adapters."
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "object_count": 44,
+      "role": "Higher-access current-state view layer with expanded fields on some objects."
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "object_count": 45,
+      "role": "Physical streaming layer with record-time and delete-marker fields; use mainly for freshness, delete behavior, and view validation."
+    },
+    {
+      "dataset": "ultracart_dw_dashboard",
+      "object_count": 2,
+      "role": "UltraCart dashboard rollup and materialized summary layer."
+    },
+    {
+      "dataset": "ultracart_dw_import",
+      "object_count": 3,
+      "role": "Imported and legacy segmentation helper layer."
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "object_count": 19,
+      "role": "Derived machine-learning and customer-scoring feature layer."
+    }
+  ],
+  "field_count_object_count": 244,
+  "field_path_canonical_table_count": 112,
+  "generated_at": "2026-07-01T00:00:00Z",
+  "object_count": 244,
+  "object_type_counts": {
+    "BASE TABLE": 65,
+    "MATERIALIZED VIEW": 1,
+    "VIEW": 178
+  },
+  "objects": [
+    {
+      "dataset": "ultracart_dw",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_clicks",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_commission_groups",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_ledgers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_network_pixel_postback_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_network_pixels",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_payments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_postback_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliates",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "attribution_sessions",
+      "name": "uc_analytics_sessions",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "commerce_core",
+      "name": "uc_auto_orders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_cart_abandons",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_conversation_agent_status_events",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_conversation_pbx_calls",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_conversations",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_coupons",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_customers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_fraud_rules",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_gift_certificates",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_integration_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "commerce_core",
+      "name": "uc_item_inventory_history",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "commerce_core",
+      "name": "uc_items",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "commerce_core",
+      "name": "uc_orders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_rotating_transaction_gateway_history",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_rotating_transaction_gateways",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "attribution_sessions",
+      "name": "uc_screen_recording_heatmap_data",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "attribution_sessions",
+      "name": "uc_screen_recordings",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_shipping_methods",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "storefront_content",
+      "name": "uc_storefront_blog_posts",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_emails",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_lists",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_segments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_sessions",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_storefront_customers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "storefront_content",
+      "name": "uc_storefront_experiments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "storefront_content",
+      "name": "uc_storefront_pages",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "attribution_sessions",
+      "name": "uc_storefront_traffic_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_offer_events",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_offers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_paths",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "storefront_content",
+      "name": "uc_storefronts",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_surveys",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_towerdata_email_intelligence",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "operations_config",
+      "name": "uc_workflow_tasks",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw",
+      "family": "customers_support",
+      "name": "uc_zoho_desk_tickets",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_clicks",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_commission_groups",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_ledgers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_network_pixel_postback_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_network_pixels",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_payments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_postback_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliates",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "attribution_sessions",
+      "name": "uc_analytics_sessions",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "commerce_core",
+      "name": "uc_auto_orders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_cart_abandons",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_conversation_agent_status_events",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_conversation_pbx_calls",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_conversations",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_coupons",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_customers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_fraud_rules",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_gift_certificates",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_integration_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "commerce_core",
+      "name": "uc_item_inventory_history",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "commerce_core",
+      "name": "uc_items",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "commerce_core",
+      "name": "uc_orders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_rotating_transaction_gateway_history",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_rotating_transaction_gateways",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "attribution_sessions",
+      "name": "uc_screen_recording_heatmap_data",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "attribution_sessions",
+      "name": "uc_screen_recordings",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_shipping_methods",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "storefront_content",
+      "name": "uc_storefront_blog_posts",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_emails",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_lists",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_segments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_sessions",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_storefront_customers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "storefront_content",
+      "name": "uc_storefront_experiments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "storefront_content",
+      "name": "uc_storefront_pages",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "attribution_sessions",
+      "name": "uc_storefront_traffic_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_offer_events",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_offers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_paths",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "storefront_content",
+      "name": "uc_storefronts",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_towerdata_email_intelligence",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "operations_config",
+      "name": "uc_workflow_tasks",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_low",
+      "family": "customers_support",
+      "name": "uc_zoho_desk_tickets",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_clicks",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_commission_groups",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_ledgers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_network_pixel_postback_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_network_pixels",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_payments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_postback_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliates",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "attribution_sessions",
+      "name": "uc_analytics_sessions",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "commerce_core",
+      "name": "uc_auto_orders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_cart_abandons",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_conversation_agent_status_events",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_conversation_pbx_calls",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_conversations",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_coupons",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_customers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_fraud_rules",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_gift_certificates",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_integration_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "commerce_core",
+      "name": "uc_item_inventory_history",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "commerce_core",
+      "name": "uc_items",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "commerce_core",
+      "name": "uc_orders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_rotating_transaction_gateway_history",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_rotating_transaction_gateways",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "attribution_sessions",
+      "name": "uc_screen_recording_heatmap_data",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "attribution_sessions",
+      "name": "uc_screen_recordings",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_shipping_methods",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "storefront_content",
+      "name": "uc_storefront_blog_posts",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_emails",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_lists",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_segments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_sessions",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_storefront_customers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "storefront_content",
+      "name": "uc_storefront_experiments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "storefront_content",
+      "name": "uc_storefront_pages",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "attribution_sessions",
+      "name": "uc_storefront_traffic_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_offer_events",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_offers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_paths",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "storefront_content",
+      "name": "uc_storefronts",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_surveys",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_towerdata_email_intelligence",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "operations_config",
+      "name": "uc_workflow_tasks",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_medium",
+      "family": "customers_support",
+      "name": "uc_zoho_desk_tickets",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_clicks",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_commission_groups",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_ledgers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_network_pixel_postback_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_network_pixels",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_payments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliate_postback_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "affiliate_commissions",
+      "name": "uc_affiliates",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "attribution_sessions",
+      "name": "uc_analytics_sessions",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "commerce_core",
+      "name": "uc_auto_orders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_cart_abandons",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_conversation_agent_status_events",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_conversation_pbx_calls",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_conversations",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_coupons",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_customers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_fraud_rules",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_gift_certificates",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_integration_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "commerce_core",
+      "name": "uc_item_inventory_history",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "commerce_core",
+      "name": "uc_items",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "commerce_core",
+      "name": "uc_orders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_rotating_transaction_gateway_history",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_rotating_transaction_gateways",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "attribution_sessions",
+      "name": "uc_screen_recording_heatmap_data",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "attribution_sessions",
+      "name": "uc_screen_recordings",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_shipping_methods",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "storefront_content",
+      "name": "uc_storefront_blog_posts",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_emails",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_lists",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_segments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_storefront_customer_sessions",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_storefront_customers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "storefront_content",
+      "name": "uc_storefront_experiments",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "storefront_content",
+      "name": "uc_storefront_pages",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "attribution_sessions",
+      "name": "uc_storefront_traffic_logs",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_offer_events",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_offers",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "storefront_content",
+      "name": "uc_storefront_upsell_paths",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "storefront_content",
+      "name": "uc_storefronts",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_surveys",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_towerdata_email_intelligence",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "operations_config",
+      "name": "uc_workflow_tasks",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_high",
+      "family": "customers_support",
+      "name": "uc_zoho_desk_tickets",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_affiliate_click_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_affiliate_commission_group_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_affiliate_ledger_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_affiliate_network_pixel_postback_log_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_affiliate_network_pixel_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_affiliate_payment_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_affiliate_postback_log_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_affiliate_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_analytics_session_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_auto_order_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_cart_abandon_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_conversation_agent_status_event_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_conversation_pbx_call_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_conversation_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_coupon_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_customer_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_fraud_rule_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_gift_certificate_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_integration_log_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_item_inventory_history_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_item_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_order_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_rotating_transaction_gateway_history_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_rotating_transaction_gateway_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_screen_recording_heatmap_data_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_screen_recording_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_shipping_method_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_blog_post_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_communications_dataset_delta",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_customer_email_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_customer_list_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_customer_segment_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_customer_session_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_customer_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_experiment_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_page_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_traffic_log_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_upsell_offer_event_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_upsell_offer_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_storefront_upsell_path_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_survey_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_towerdata_email_intelligence_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_workflow_task_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_streaming",
+      "family": "streaming",
+      "name": "uc_zoho_desk_ticket_streaming",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_dashboard",
+      "family": "dashboard",
+      "name": "uc_order_summary_mv",
+      "object_type": "MATERIALIZED VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_dashboard",
+      "family": "dashboard",
+      "name": "uc_orders",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_import",
+      "family": "import",
+      "name": "segment_customers_autoOrders",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_import",
+      "family": "import",
+      "name": "segment_regular_1Month",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_import",
+      "family": "import",
+      "name": "SLAgent_content_versions",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "c90",
+      "object_type": "VIEW"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_auto_orders_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_comms_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_comms_trends_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_orders_22382_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_orders_trends_22382_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_profiles_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_recent_comms_22382_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_recent_sessions_22382_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_screen_recordings_22382_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_sessions_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_sessions_bounding_shape_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_sessions_trends_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_targets_22382_365_90",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "customer_tower_data",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "dataset_registry",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "model_monitor",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "model_registry",
+      "object_type": "BASE TABLE"
+    },
+    {
+      "dataset": "ultracart_dw_ml",
+      "family": "ml",
+      "name": "retention_score_22382_365_90",
+      "object_type": "BASE TABLE"
+    }
+  ],
+  "okf_version": "0.1",
+  "source_kind": "metadata_only_standard_catalog"
+}

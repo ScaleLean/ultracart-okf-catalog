@@ -1,0 +1,22 @@
+# Merchant-neutral template for scripts/build_ultracart_okf.py.
+# Copy this file to configs/local.yml and fill in projects you are authorized to inspect.
+
+okf_version: "0.1"
+bundle_name: "UltraCart BigQuery Warehouse"
+source_project: "YOUR_ULTRACART_DW_PROJECT"
+billing_project: "YOUR_BILLING_PROJECT"
+discovery_mode: "all_datasets"
+
+# Leave empty for first-principles project discovery across every dataset in
+# source_project. Set to a list only for deliberately narrowed reruns.
+dataset_allowlist:
+
+generator_policy:
+  sample_rows: false
+  include_view_sql: false
+  include_raw_values: false
+
+tags:
+  - ultracart
+  - bigquery
+  - okf

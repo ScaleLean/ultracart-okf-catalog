@@ -1,0 +1,25 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+*.log
+
+# Generated merchant-specific OKF bundles and reports are local artifacts.
+okf/*
+!okf/README.md
+!okf/.gitkeep
+!okf/ultracart_warehouse/
+!okf/ultracart_warehouse/**
+reports/*
+!reports/README.md
+!reports/.gitkeep
+!reports/standard_catalog_self_test.md
+!reports/agent_usability_audit.md
+
+# Local configs may contain project identifiers for specific merchants.
+configs/local*.yml
+configs/*local*.yaml

@@ -1,0 +1,533 @@
+---
+type: "BigQuery View"
+title: "ultracart_dw_high.uc_analytics_sessions"
+description: "UltraCart analytics session model with nested hits and session behavior fields."
+resource: "urn:ultracart:bigquery:object:ultracart_dw_high.uc_analytics_sessions"
+tags:
+  - "ultracart"
+  - "bigquery"
+  - "view"
+  - "ultracart_dw_high"
+  - "uc_analytics_sessions"
+  - "attribution_sessions"
+timestamp: "2026-07-01T00:00:00Z"
+---
+
+# ultracart_dw_high.uc_analytics_sessions
+
+UltraCart analytics session model with nested hits and session behavior fields.
+
+## Definition
+
+- Dataset: [ultracart_dw_high](/datasets/ultracart_dw_high.md)
+- Object name: `uc_analytics_sessions`
+- Object type: `VIEW`
+- Table family: [attribution_sessions](/references/table_families.md#attribution-sessions)
+- Grain: One analytics session row per client_session_oid.
+- Canonical definition: [uc_analytics_sessions](/concepts/tables_by_name/uc_analytics_sessions.md)
+
+## Schema Coverage
+
+- Field paths: 480
+- Array fields: 18
+- Struct fields: 89
+
+## Field Paths
+
+| Field path | Data type |
+|---|---|
+| `client_id` | `STRING` |
+| `client_pointer_oid` | `INTEGER` |
+| `client_session_oid` | `INTEGER` |
+| `customer_profile_oid` | `INTEGER` |
+| `email` | `STRING` |
+| `email_hash` | `STRING` |
+| `first_seen_dts` | `DATETIME` |
+| `hits` | `ARRAY<STRUCT>` |
+| `hits.action` | `STRING` |
+| `hits.api_call` | `STRUCT` |
+| `hits.api_call.method` | `STRING` |
+| `hits.api_call.rate_limited_request` | `BOOLEAN` |
+| `hits.api_call.request_uri` | `STRING` |
+| `hits.api_call_rate_limited` | `STRUCT` |
+| `hits.api_call_rate_limited.method` | `STRING` |
+| `hits.api_call_rate_limited.request_uri` | `STRING` |
+| `hits.auto_order_cancel` | `STRUCT` |
+| `hits.auto_order_cancel.item_id` | `STRING` |
+| `hits.auto_order_cancel.original_order_id` | `STRING` |
+| `hits.auto_order_cancel.rebill_count` | `INTEGER` |
+| `hits.auto_order_disable` | `STRUCT` |
+| `hits.auto_order_disable.item_id` | `STRING` |
+| `hits.auto_order_disable.original_order_id` | `STRING` |
+| `hits.auto_order_disable.rebill_count` | `INTEGER` |
+| `hits.auto_order_established` | `STRUCT` |
+| `hits.auto_order_established.item_id` | `STRING` |
+| `hits.auto_order_established.order_id` | `STRING` |
+| `hits.auto_order_established.profit` | `NUMERIC` |
+| `hits.auto_order_established.quantity` | `INTEGER` |
+| `hits.auto_order_established.revenue` | `NUMERIC` |
+| `hits.auto_order_established.shipping` | `NUMERIC` |
+| `hits.auto_order_fail` | `STRUCT` |
+| `hits.auto_order_fail.item_id` | `STRING` |
+| `hits.auto_order_fail.original_order_id` | `STRING` |
+| `hits.auto_order_fail.rebill_count` | `INTEGER` |
+| `hits.auto_order_rebill` | `STRUCT` |
+| `hits.auto_order_rebill.item_id` | `STRING` |
+| `hits.auto_order_rebill.order_id` | `STRING` |
+| `hits.auto_order_rebill.original_order_id` | `STRING` |
+| `hits.auto_order_rebill.profit` | `NUMERIC` |
+| `hits.auto_order_rebill.quantity` | `INTEGER` |
+| `hits.auto_order_rebill.rebill_count` | `INTEGER` |
+| `hits.auto_order_rebill.revenue` | `NUMERIC` |
+| `hits.auto_order_rebill.shipping` | `NUMERIC` |
+| `hits.auto_order_status` | `STRUCT` |
+| `hits.auto_order_status.active` | `BOOLEAN` |
+| `hits.auto_order_status.item_ids` | `ARRAY<STRUCT>` |
+| `hits.auto_order_status.item_ids.value` | `STRING` |
+| `hits.auto_order_status.item_ids_active` | `ARRAY<STRUCT>` |
+| `hits.auto_order_status.item_ids_active.value` | `STRING` |
+| `hits.auto_order_status.item_ids_completed` | `ARRAY<STRUCT>` |
+| `hits.auto_order_status.item_ids_completed.value` | `STRING` |
+| `hits.auto_order_status.item_ids_paused` | `ARRAY<STRUCT>` |
+| `hits.auto_order_status.item_ids_paused.value` | `STRING` |
+| `hits.auto_order_status.original_order_id` | `STRING` |
+| `hits.bot_page_scrape` | `STRUCT` |
+| `hits.bot_page_scrape.external_page_view` | `BOOLEAN` |
+| `hits.bot_page_scrape.url` | `STRING` |
+| `hits.bot_page_scrape.user_agent` | `STRING` |
+| `hits.checkout_abandon` | `STRUCT` |
+| `hits.checkout_abandon.item_list` | `ARRAY<STRUCT>` |
+| `hits.checkout_abandon.item_list.item_id` | `STRING` |
+| `hits.checkout_abandon.item_list.quantity` | `INTEGER` |
+| `hits.checkout_add_items` | `STRUCT` |
+| `hits.checkout_add_items.item_list` | `ARRAY<STRUCT>` |
+| `hits.checkout_add_items.item_list.item_id` | `STRING` |
+| `hits.checkout_add_items.item_list.quantity` | `INTEGER` |
+| `hits.checkout_errors` | `STRUCT` |
+| `hits.checkout_errors.errors` | `ARRAY<STRUCT>` |
+| `hits.checkout_errors.errors.value` | `STRING` |
+| `hits.checkout_initiate` | `STRUCT` |
+| `hits.checkout_initiate.item_list` | `ARRAY<STRUCT>` |
+| `hits.checkout_initiate.item_list.item_id` | `STRING` |
+| `hits.checkout_initiate.item_list.quantity` | `INTEGER` |
+| `hits.checkout_initiate.starting_page_name` | `STRING` |
+| `hits.checkout_step` | `STRUCT` |
+| `hits.checkout_step.page_description` | `STRING` |
+| `hits.checkout_step.step_name` | `STRING` |
+| `hits.checkout_update_items` | `STRUCT` |
+| `hits.checkout_update_items.itemList` | `ARRAY<STRUCT>` |
+| `hits.checkout_update_items.itemList.item_id` | `STRING` |
+| `hits.checkout_update_items.itemList.quantity` | `INTEGER` |
+| `hits.customer_add_tags` | `STRUCT` |
+| `hits.customer_add_tags.tags` | `ARRAY<STRUCT>` |
+| `hits.customer_add_tags.tags.value` | `STRING` |
+| `hits.customer_loyalty_balance` | `STRUCT` |
+| `hits.customer_loyalty_balance.balance` | `NUMERIC` |
+| `hits.customer_loyalty_balance.expiring_within_month` | `NUMERIC` |
+| `hits.customer_loyalty_balance.unvested` | `NUMERIC` |
+| `hits.customer_loyalty_points` | `STRUCT` |
+| `hits.customer_loyalty_points.unvested` | `INTEGER` |
+| `hits.customer_loyalty_points.vested` | `INTEGER` |
+| `hits.customer_update_pricing_tiers` | `STRUCT` |
+| `hits.customer_update_pricing_tiers.pricing_tier_oids` | `ARRAY<STRUCT>` |
+| `hits.customer_update_pricing_tiers.pricing_tier_oids.value` | `INTEGER` |
+| `hits.customer_update_tags` | `STRUCT` |
+| `hits.customer_update_tags.tags` | `ARRAY<STRUCT>` |
+| `hits.customer_update_tags.tags.value` | `STRING` |
+| `hits.ecommerce_accounts_receivable` | `STRUCT` |
+| `hits.ecommerce_accounts_receivable.bill_to_country_Code` | `STRING` |
+| `hits.ecommerce_accounts_receivable.channel` | `STRING` |
+| `hits.ecommerce_accounts_receivable.cogs` | `NUMERIC` |
+| `hits.ecommerce_accounts_receivable.first_name` | `STRING` |
+| `hits.ecommerce_accounts_receivable.last_name` | `STRING` |
+| `hits.ecommerce_accounts_receivable.order_id` | `STRING` |
+| `hits.ecommerce_accounts_receivable.placed_by_user` | `STRING` |
+| `hits.ecommerce_accounts_receivable.profit` | `NUMERIC` |
+| `hits.ecommerce_accounts_receivable.ship_to_country_code` | `STRING` |
+| `hits.ecommerce_accounts_receivable.shipping_handling` | `NUMERIC` |
+| `hits.ecommerce_accounts_receivable.subtotal` | `NUMERIC` |
+| `hits.ecommerce_accounts_receivable.tags` | `ARRAY<STRUCT>` |
+| `hits.ecommerce_accounts_receivable.tags.value` | `STRING` |
+| `hits.ecommerce_accounts_receivable.tax` | `NUMERIC` |
+| `hits.ecommerce_accounts_receivable.total` | `NUMERIC` |
+| `hits.ecommerce_accounts_receivable_try` | `STRUCT` |
+| `hits.ecommerce_accounts_receivable_try.attempt` | `BOOLEAN` |
+| `hits.ecommerce_accounts_receivable_try.channel` | `STRING` |
+| `hits.ecommerce_accounts_receivable_try.day` | `INTEGER` |
+| `hits.ecommerce_accounts_receivable_try.order_id` | `STRING` |
+| `hits.ecommerce_accounts_receivable_try.rejected` | `BOOLEAN` |
+| `hits.ecommerce_accounts_receivable_try.subtotal_discount` | `NUMERIC` |
+| `hits.ecommerce_accounts_receivable_try.successful` | `BOOLEAN` |
+| `hits.ecommerce_accounts_receivable_try.total` | `NUMERIC` |
+| `hits.ecommerce_address` | `STRUCT` |
+| `hits.ecommerce_address.address1` | `STRING` |
+| `hits.ecommerce_address.address1_hash` | `STRING` |
+| `hits.ecommerce_address.address2` | `STRING` |
+| `hits.ecommerce_address.address2_hash` | `STRING` |
+| `hits.ecommerce_address.city` | `STRING` |
+| `hits.ecommerce_address.company` | `STRING` |
+| `hits.ecommerce_address.company_hash` | `STRING` |
+| `hits.ecommerce_address.country_code` | `STRING` |
+| `hits.ecommerce_address.first_name` | `STRING` |
+| `hits.ecommerce_address.first_name_hash` | `STRING` |
+| `hits.ecommerce_address.last_name` | `STRING` |
+| `hits.ecommerce_address.last_name_hash` | `STRING` |
+| `hits.ecommerce_address.postal_code` | `STRING` |
+| `hits.ecommerce_address.state` | `STRING` |
+| `hits.ecommerce_affiliate_click` | `STRUCT` |
+| `hits.ecommerce_affiliate_click.affiliate_click_oid` | `INTEGER` |
+| `hits.ecommerce_affiliate_click.affiliate_oid` | `INTEGER` |
+| `hits.ecommerce_affiliate_click.landing_page_url` | `STRING` |
+| `hits.ecommerce_affiliate_click.referrer` | `STRING` |
+| `hits.ecommerce_affiliate_click.sub_id` | `STRING` |
+| `hits.ecommerce_affiliate_commission` | `STRUCT` |
+| `hits.ecommerce_affiliate_commission.affiliate_commission` | `NUMERIC` |
+| `hits.ecommerce_affiliate_commission.affiliate_email` | `STRING` |
+| `hits.ecommerce_affiliate_commission.affiliate_id` | `INTEGER` |
+| `hits.ecommerce_affiliate_commission.order_id` | `STRING` |
+| `hits.ecommerce_affiliate_commission.payment_date` | `DATETIME` |
+| `hits.ecommerce_affiliate_network_commission` | `STRUCT` |
+| `hits.ecommerce_affiliate_network_commission.affiliate_commission` | `NUMERIC` |
+| `hits.ecommerce_affiliate_network_commission.network_id` | `STRING` |
+| `hits.ecommerce_affiliate_network_commission.order_id` | `STRING` |
+| `hits.ecommerce_affiliate_network_commission.payment_date` | `DATETIME` |
+| `hits.ecommerce_affiliate_network_skip` | `STRUCT` |
+| `hits.ecommerce_affiliate_network_skip.network_id` | `STRING` |
+| `hits.ecommerce_affiliate_network_skip.order_id` | `STRING` |
+| `hits.ecommerce_affiliate_network_skip.payment_date` | `DATETIME` |
+| `hits.ecommerce_avs_capture` | `STRUCT` |
+| `hits.ecommerce_avs_capture.order_id` | `STRING` |
+| `hits.ecommerce_avs_capture.total` | `NUMERIC` |
+| `hits.ecommerce_ordered_product` | `STRUCT` |
+| `hits.ecommerce_ordered_product.item_id` | `STRING` |
+| `hits.ecommerce_ordered_product.item_oid` | `INTEGER` |
+| `hits.ecommerce_ordered_product.order_id` | `STRING` |
+| `hits.ecommerce_ordered_product.profit` | `NUMERIC` |
+| `hits.ecommerce_ordered_product.quantity` | `INTEGER` |
+| `hits.ecommerce_ordered_product.tags` | `ARRAY<STRUCT>` |
+| `hits.ecommerce_ordered_product.tags.value` | `STRING` |
+| `hits.ecommerce_ordered_product.unit_cost` | `NUMERIC` |
+| `hits.ecommerce_payment` | `STRUCT` |
+| `hits.ecommerce_payment.amount` | `NUMERIC` |
+| `hits.ecommerce_payment.channel` | `STRING` |
+| `hits.ecommerce_payment.fee` | `NUMERIC` |
+| `hits.ecommerce_payment.order_id` | `STRING` |
+| `hits.ecommerce_payment_reserve` | `STRUCT` |
+| `hits.ecommerce_payment_reserve.amount` | `NUMERIC` |
+| `hits.ecommerce_payment_reserve.channel` | `STRING` |
+| `hits.ecommerce_payment_reserve.fee` | `NUMERIC` |
+| `hits.ecommerce_payment_reserve.order_id` | `STRING` |
+| `hits.ecommerce_payment_reserve.rtg_code` | `STRING` |
+| `hits.ecommerce_placed_order` | `STRUCT` |
+| `hits.ecommerce_placed_order.bill_to_country_Code` | `STRING` |
+| `hits.ecommerce_placed_order.channel` | `STRING` |
+| `hits.ecommerce_placed_order.cogs` | `NUMERIC` |
+| `hits.ecommerce_placed_order.first_name` | `STRING` |
+| `hits.ecommerce_placed_order.last_name` | `STRING` |
+| `hits.ecommerce_placed_order.order_id` | `STRING` |
+| `hits.ecommerce_placed_order.placed_by_user` | `STRING` |
+| `hits.ecommerce_placed_order.profit` | `NUMERIC` |
+| `hits.ecommerce_placed_order.ship_to_country_code` | `STRING` |
+| `hits.ecommerce_placed_order.shipping_handling` | `NUMERIC` |
+| `hits.ecommerce_placed_order.subtotal` | `NUMERIC` |
+| `hits.ecommerce_placed_order.tags` | `ARRAY<STRUCT>` |
+| `hits.ecommerce_placed_order.tags.value` | `STRING` |
+| `hits.ecommerce_placed_order.tax` | `NUMERIC` |
+| `hits.ecommerce_placed_order.total` | `NUMERIC` |
+| `hits.ecommerce_refund` | `STRUCT` |
+| `hits.ecommerce_refund.amount` | `NUMERIC` |
+| `hits.ecommerce_refund.fee` | `NUMERIC` |
+| `hits.ecommerce_refund.order_id` | `STRING` |
+| `hits.ecommerce_shipment` | `STRUCT` |
+| `hits.ecommerce_shipment.channel` | `STRING` |
+| `hits.ecommerce_shipment.distribution_center` | `STRING` |
+| `hits.ecommerce_shipment.fulfillment_fees` | `NUMERIC` |
+| `hits.ecommerce_shipment.order_id` | `STRING` |
+| `hits.ecommerce_shipment.payment_date` | `DATETIME` |
+| `hits.ecommerce_shipment.shipment_fees` | `NUMERIC` |
+| `hits.ecommerce_shipment.total` | `NUMERIC` |
+| `hits.ecommerce_shipment.unit_count` | `INTEGER` |
+| `hits.ecommerce_test_order` | `STRUCT` |
+| `hits.ecommerce_test_order.bill_to_country_Code` | `STRING` |
+| `hits.ecommerce_test_order.channel` | `STRING` |
+| `hits.ecommerce_test_order.cogs` | `NUMERIC` |
+| `hits.ecommerce_test_order.first_name` | `STRING` |
+| `hits.ecommerce_test_order.last_name` | `STRING` |
+| `hits.ecommerce_test_order.order_id` | `STRING` |
+| `hits.ecommerce_test_order.placed_by_user` | `STRING` |
+| `hits.ecommerce_test_order.profit` | `NUMERIC` |
+| `hits.ecommerce_test_order.ship_to_country_code` | `STRING` |
+| `hits.ecommerce_test_order.shipping_handling` | `NUMERIC` |
+| `hits.ecommerce_test_order.subtotal` | `NUMERIC` |
+| `hits.ecommerce_test_order.tax` | `NUMERIC` |
+| `hits.ecommerce_test_order.total` | `NUMERIC` |
+| `hits.ecommerce_upsell` | `STRUCT` |
+| `hits.ecommerce_upsell.channel` | `STRING` |
+| `hits.ecommerce_upsell.item_id` | `STRING` |
+| `hits.ecommerce_upsell.order_id` | `STRING` |
+| `hits.ecommerce_upsell.profit` | `NUMERIC` |
+| `hits.ecommerce_upsell.quantity` | `INTEGER` |
+| `hits.ecommerce_upsell.revenue` | `NUMERIC` |
+| `hits.ecommerce_upsell.total` | `NUMERIC` |
+| `hits.ecommerce_upsell.upsell_offer_name` | `STRING` |
+| `hits.ecommerce_upsell_decline` | `STRUCT` |
+| `hits.ecommerce_upsell_decline.channel` | `STRING` |
+| `hits.ecommerce_upsell_decline.upsell_offer_name` | `STRING` |
+| `hits.ecommerce_void` | `STRUCT` |
+| `hits.ecommerce_void.amount` | `NUMERIC` |
+| `hits.ecommerce_void.fee` | `NUMERIC` |
+| `hits.ecommerce_void.order_id` | `STRING` |
+| `hits.email_click` | `STRUCT` |
+| `hits.email_click.esp_commseq_email_uuid` | `STRING` |
+| `hits.email_click.esp_commseq_step_uuid` | `STRING` |
+| `hits.email_click.esp_commseq_uuid` | `STRING` |
+| `hits.email_click.storefront_oid` | `INTEGER` |
+| `hits.email_click.subject` | `STRING` |
+| `hits.email_click.url` | `STRING` |
+| `hits.email_delivery` | `STRUCT` |
+| `hits.email_delivery.esp_commseq_email_uuid` | `STRING` |
+| `hits.email_delivery.esp_commseq_step_uuid` | `STRING` |
+| `hits.email_delivery.esp_commseq_uuid` | `STRING` |
+| `hits.email_delivery.storefront_oid` | `INTEGER` |
+| `hits.email_delivery.subject` | `STRING` |
+| `hits.email_hard_bounce` | `STRUCT` |
+| `hits.email_hard_bounce.esp_commseq_email_uuid` | `STRING` |
+| `hits.email_hard_bounce.esp_commseq_step_uuid` | `STRING` |
+| `hits.email_hard_bounce.esp_commseq_uuid` | `STRING` |
+| `hits.email_hard_bounce.storefront_oid` | `INTEGER` |
+| `hits.email_hard_bounce.subject` | `STRING` |
+| `hits.email_list_subscribe` | `STRUCT` |
+| `hits.email_list_subscribe.esp_list_uuid` | `STRING` |
+| `hits.email_list_subscribe.storefront_oid` | `INTEGER` |
+| `hits.email_list_unsubscribe` | `STRUCT` |
+| `hits.email_list_unsubscribe.esp_list_uuid` | `STRING` |
+| `hits.email_list_unsubscribe.storefront_oid` | `INTEGER` |
+| `hits.email_open` | `STRUCT` |
+| `hits.email_open.esp_commseq_email_uuid` | `STRING` |
+| `hits.email_open.esp_commseq_step_uuid` | `STRING` |
+| `hits.email_open.esp_commseq_uuid` | `STRING` |
+| `hits.email_open.storefront_oid` | `INTEGER` |
+| `hits.email_open.subject` | `STRING` |
+| `hits.email_soft_bounce` | `STRUCT` |
+| `hits.email_soft_bounce.esp_commseq_email_uuid` | `STRING` |
+| `hits.email_soft_bounce.esp_commseq_step_uuid` | `STRING` |
+| `hits.email_soft_bounce.esp_commseq_uuid` | `STRING` |
+| `hits.email_soft_bounce.storefront_oid` | `INTEGER` |
+| `hits.email_soft_bounce.subject` | `STRING` |
+| `hits.email_spam_complaint` | `STRUCT` |
+| `hits.email_spam_complaint.esp_commseq_email_uuid` | `STRING` |
+| `hits.email_spam_complaint.esp_commseq_step_uuid` | `STRING` |
+| `hits.email_spam_complaint.esp_commseq_uuid` | `STRING` |
+| `hits.email_spam_complaint.storefront_oid` | `INTEGER` |
+| `hits.email_spam_complaint.subject` | `STRING` |
+| `hits.experiment` | `STRUCT` |
+| `hits.experiment.experiment_id` | `STRING` |
+| `hits.experiment.storefront_oid` | `INTEGER` |
+| `hits.experiment.variation` | `INTEGER` |
+| `hits.item_review` | `STRUCT` |
+| `hits.item_review.channel` | `STRING` |
+| `hits.item_review.item_id` | `STRING` |
+| `hits.item_view` | `STRUCT` |
+| `hits.item_view.item_id` | `STRING` |
+| `hits.iterable` | `STRUCT` |
+| `hits.iterable.iterable_email_campaign_id` | `STRING` |
+| `hits.iterable.iterable_end_user_id` | `STRING` |
+| `hits.iterable.iterable_message_id` | `STRING` |
+| `hits.iterable.iterable_template_id` | `STRING` |
+| `hits.marketplace_fee` | `STRUCT` |
+| `hits.marketplace_fee.channel` | `STRING` |
+| `hits.marketplace_fee.fee` | `NUMERIC` |
+| `hits.marketplace_transaction` | `STRUCT` |
+| `hits.marketplace_transaction.amount` | `NUMERIC` |
+| `hits.marketplace_transaction.channel` | `STRING` |
+| `hits.marketplace_transaction.fee` | `NUMERIC` |
+| `hits.marketplace_transaction.order_id` | `STRING` |
+| `hits.page_event` | `STRUCT` |
+| `hits.page_event.category` | `STRING` |
+| `hits.page_event.event` | `STRING` |
+| `hits.page_event.label` | `STRING` |
+| `hits.page_event.value` | `STRING` |
+| `hits.page_view` | `STRUCT` |
+| `hits.page_view.bounce` | `BOOLEAN` |
+| `hits.page_view.meta_data` | `ARRAY<STRUCT>` |
+| `hits.page_view.meta_data.key` | `STRING` |
+| `hits.page_view.meta_data.value` | `STRING` |
+| `hits.page_view.method` | `STRING` |
+| `hits.page_view.prefetch` | `BOOLEAN` |
+| `hits.page_view.query` | `STRING` |
+| `hits.page_view.recording` | `BOOLEAN` |
+| `hits.page_view.redirect` | `BOOLEAN` |
+| `hits.page_view.referrer` | `STRING` |
+| `hits.page_view.time_on_page` | `NUMERIC` |
+| `hits.page_view.title` | `STRING` |
+| `hits.page_view.url` | `STRING` |
+| `hits.rtg_transaction` | `STRUCT` |
+| `hits.rtg_transaction.amount` | `NUMERIC` |
+| `hits.rtg_transaction.bin` | `STRING` |
+| `hits.rtg_transaction.country` | `STRING` |
+| `hits.rtg_transaction.rebill` | `BOOLEAN` |
+| `hits.rtg_transaction.rtg_code` | `STRING` |
+| `hits.rtg_transaction.successful` | `BOOLEAN` |
+| `hits.search_query` | `STRUCT` |
+| `hits.search_query.description` | `STRING` |
+| `hits.search_query.results` | `INTEGER` |
+| `hits.session_debug` | `STRUCT` |
+| `hits.session_debug.message` | `STRING` |
+| `hits.session_identify` | `STRUCT` |
+| `hits.session_identify.email` | `STRING` |
+| `hits.session_identify.email_hash` | `STRING` |
+| `hits.session_identify.location` | `STRING` |
+| `hits.session_identify_sms` | `STRUCT` |
+| `hits.session_identify_sms.cell_phone` | `STRING` |
+| `hits.session_identify_sms.cell_phone_hash` | `STRING` |
+| `hits.session_identify_sms.location` | `STRING` |
+| `hits.session_recording` | `STRUCT` |
+| `hits.session_recording.screen_recording_uuid` | `STRING` |
+| `hits.session_search_engine_organic` | `STRUCT` |
+| `hits.session_search_engine_organic.domain` | `STRING` |
+| `hits.session_search_engine_organic.name` | `STRING` |
+| `hits.session_start` | `STRUCT` |
+| `hits.session_start.bot` | `BOOLEAN` |
+| `hits.session_start.bounce` | `BOOLEAN` |
+| `hits.session_start.channel` | `STRING` |
+| `hits.session_start.device_switch_detected` | `BOOLEAN` |
+| `hits.session_start.fake_bot` | `BOOLEAN` |
+| `hits.session_start.geolocation_country` | `STRING` |
+| `hits.session_start.geolocation_latitude` | `NUMERIC` |
+| `hits.session_start.geolocation_longitude` | `NUMERIC` |
+| `hits.session_start.geolocation_province` | `STRING` |
+| `hits.session_start.no_cookie_support` | `BOOLEAN` |
+| `hits.session_start.prefetch` | `BOOLEAN` |
+| `hits.session_start.referrer` | `STRING` |
+| `hits.session_start.screen_height` | `INTEGER` |
+| `hits.session_start.screen_width` | `INTEGER` |
+| `hits.session_start.time_on_Site` | `NUMERIC` |
+| `hits.session_start.user_agent` | `STRING` |
+| `hits.session_start.user_ip` | `STRING` |
+| `hits.session_utm` | `STRUCT` |
+| `hits.session_utm.fb_ad_id` | `STRING` |
+| `hits.session_utm.fbclid` | `STRING` |
+| `hits.session_utm.gbraid` | `STRING` |
+| `hits.session_utm.gclid` | `STRING` |
+| `hits.session_utm.msclkid` | `STRING` |
+| `hits.session_utm.ttclid` | `STRING` |
+| `hits.session_utm.uc_message_id` | `STRING` |
+| `hits.session_utm.utm_campaign` | `STRING` |
+| `hits.session_utm.utm_content` | `STRING` |
+| `hits.session_utm.utm_id` | `STRING` |
+| `hits.session_utm.utm_medium` | `STRING` |
+| `hits.session_utm.utm_source` | `STRING` |
+| `hits.session_utm.utm_term` | `STRING` |
+| `hits.session_utm.vmcid` | `STRING` |
+| `hits.session_utm.wbraid` | `STRING` |
+| `hits.towerdata_email_intelligence` | `STRUCT` |
+| `hits.towerdata_email_intelligence.aci` | `STRUCT` |
+| `hits.towerdata_email_intelligence.aci.big_spender` | `STRUCT` |
+| `hits.towerdata_email_intelligence.aci.big_spender.value` | `STRING` |
+| `hits.towerdata_email_intelligence.aci.deal_seeker` | `STRUCT` |
+| `hits.towerdata_email_intelligence.aci.deal_seeker.value` | `STRING` |
+| `hits.towerdata_email_intelligence.age` | `STRING` |
+| `hits.towerdata_email_intelligence.eam` | `STRUCT` |
+| `hits.towerdata_email_intelligence.eam.dateFirstSeen` | `STRING` |
+| `hits.towerdata_email_intelligence.eam.longevity` | `INTEGER` |
+| `hits.towerdata_email_intelligence.eam.month_last_open` | `STRING` |
+| `hits.towerdata_email_intelligence.eam.popularity` | `INTEGER` |
+| `hits.towerdata_email_intelligence.eam.velocity` | `INTEGER` |
+| `hits.towerdata_email_intelligence.education` | `STRING` |
+| `hits.towerdata_email_intelligence.email` | `STRING` |
+| `hits.towerdata_email_intelligence.email_hash` | `STRING` |
+| `hits.towerdata_email_intelligence.financial_group` | `STRING` |
+| `hits.towerdata_email_intelligence.financial_segment` | `STRING` |
+| `hits.towerdata_email_intelligence.gender` | `STRING` |
+| `hits.towerdata_email_intelligence.home_owner_status` | `STRING` |
+| `hits.towerdata_email_intelligence.household_income` | `STRING` |
+| `hits.towerdata_email_intelligence.interests` | `STRUCT` |
+| `hits.towerdata_email_intelligence.interests.arts_and_crafts` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.automotive` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.baby_product_buyer` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.beauty` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.blogging` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.books` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.business` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.charitable_donors` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.cooking` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.discount_shopper` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.health_and_wellness` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.high_end_brand_buyer` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.home_and_garden` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.home_improvement` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.luxury_goods` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.magazine_buyer` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.news_and_current_events` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.outdoor_and_adventure` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.pets` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.sports` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.technology` | `STRING` |
+| `hits.towerdata_email_intelligence.interests.travel` | `STRING` |
+| `hits.towerdata_email_intelligence.length_of_residence` | `STRING` |
+| `hits.towerdata_email_intelligence.life_stage_group` | `STRING` |
+| `hits.towerdata_email_intelligence.life_stage_segment` | `STRING` |
+| `hits.towerdata_email_intelligence.marital_status` | `STRING` |
+| `hits.towerdata_email_intelligence.net_worth` | `STRING` |
+| `hits.towerdata_email_intelligence.occupation` | `STRING` |
+| `hits.towerdata_email_intelligence.presence_of_children` | `STRING` |
+| `hits.towerdata_email_intelligence.rfm_avg_dollars` | `STRING` |
+| `hits.towerdata_email_intelligence.rfm_online_avg_days` | `STRING` |
+| `hits.tracking_facebook_pixel` | `STRUCT` |
+| `hits.tracking_facebook_pixel.fbc` | `STRING` |
+| `hits.tracking_facebook_pixel.fbclid` | `STRING` |
+| `hits.tracking_facebook_pixel.fbp` | `STRING` |
+| `hits.ts` | `DATETIME` |
+| `hits.type` | `STRING` |
+| `hits.utm_campaign_spend` | `STRUCT` |
+| `hits.utm_campaign_spend.ad_name` | `STRING` |
+| `hits.utm_campaign_spend.campaign` | `STRING` |
+| `hits.utm_campaign_spend.channel` | `STRING` |
+| `hits.utm_campaign_spend.clicks` | `INTEGER` |
+| `hits.utm_campaign_spend.impressions` | `INTEGER` |
+| `hits.utm_campaign_spend.landing_page` | `STRING` |
+| `hits.utm_campaign_spend.source` | `STRING` |
+| `hits.utm_campaign_spend.spend` | `NUMERIC` |
+| `last_seen_dts` | `DATETIME` |
+| `merchant_id` | `STRING` |
+| `new_customer` | `BOOLEAN` |
+| `new_visitor` | `BOOLEAN` |
+| `order_id` | `STRING` |
+| `partition_date` | `DATE` |
+| `session_dts` | `DATETIME` |
+| `sms` | `STRING` |
+| `sms_hash` | `STRING` |
+| `utms` | `ARRAY<STRUCT>` |
+| `utms.fb_ad_id` | `STRING` |
+| `utms.fbclid` | `STRING` |
+| `utms.gbraid` | `STRING` |
+| `utms.gclid` | `STRING` |
+| `utms.msclkid` | `STRING` |
+| `utms.prior_session` | `BOOLEAN` |
+| `utms.ts` | `DATETIME` |
+| `utms.ttclid` | `STRING` |
+| `utms.uc_message_id` | `STRING` |
+| `utms.utm_campaign` | `STRING` |
+| `utms.utm_content` | `STRING` |
+| `utms.utm_id` | `STRING` |
+| `utms.utm_medium` | `STRING` |
+| `utms.utm_source` | `STRING` |
+| `utms.utm_term` | `STRING` |
+| `utms.vmcid` | `STRING` |
+| `utms.wbraid` | `STRING` |
+| `visitor_number` | `INTEGER` |
+
+## Query Pattern
+
+```sql
+SELECT
+  COUNT(1) AS row_count
+FROM `{{ source_project }}.ultracart_dw_high.uc_analytics_sessions`;
+```
+
+Use explicit field lists and time, storefront, status, or business-key filters when querying large behavioral, streaming, or customer-support objects.
+
+## References
+
+- [BigQuery usage patterns](/references/bigquery_usage.md)
+- [Source coverage](/references/source_coverage.md)
