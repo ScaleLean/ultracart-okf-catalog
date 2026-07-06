@@ -46,6 +46,22 @@ Merchant overlays may **rebind** an object to their own model (e.g. a dbt table 
 unifies Amazon + UltraCart orders) without changing the property contract — see
 `bindings:` in the config template.
 
+## How big is the warehouse, really?
+
+Don't let the object count mislead you. The catalog lists **244 objects / 112 canonical
+names**, but that is heavily inflated:
+
+- **~44 real business tables** (orders, customers, items, auto-orders, coupons, sessions,
+  support, affiliates, …) — the actual source entities.
+- Each appears at **4 permission tiers** (`dw` / `low` / `medium` / `high`, increasing PII
+  exposure) — that's ~176 objects that are really the same ~44 tables.
+- **+44 streaming twins** — a change-feed copy (`*_streaming`) of each entity.
+- **+19 ML outputs** (some with a merchant id baked into the name) and **~5** dashboard/import.
+
+So the real distinct-entity count is **~44**, which this ontology distills to **28 business
+objects** worth modeling. When describing the warehouse, say "~44 real tables across
+permission tiers," not "112 tables."
+
 ## Domains
 
 commerce_core · subscriptions · catalog · promotions · marketing_comms ·
