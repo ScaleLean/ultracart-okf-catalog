@@ -42,7 +42,7 @@ bq query --project_id=<billing> --use_legacy_sql=false < build/<merchant>/ontolo
 python3 scripts/validate_ontology.py --compiled config/local/<merchant>.yml
 ```
 
-Merchant overlays may **rebind** an object to their own model (e.g. a dbt table that
+Merchant overlays may **rebind** an object to their own model (e.g. a view that
 unifies Amazon + UltraCart orders) without changing the property contract — see
 `bindings:` in the config template.
 

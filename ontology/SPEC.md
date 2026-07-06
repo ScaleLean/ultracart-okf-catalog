@@ -123,8 +123,8 @@ status: declared                      # declared | registered:<merchant>
 ## Merchant config (`config/merchant_ontology_template.yml`)
 
 Declares: `merchant_id`, `source_project`, dataset tier names, `ontology_project`,
-`ontology_dataset`, optional `bindings:` overrides (point an object at a different
-table, e.g. a dbt model), optional `parameters:` overrides, optional `exclude_objects:`.
+`ontology_dataset`, optional `bindings:` overrides (
+table, e.g. a merchant unified view), optional `parameters:` overrides, optional `exclude_objects:`.
 The compiler refuses to run if a binding override changes the property contract
 (names/types) — overrides may change *where* data comes from, never *what the object means*.
 

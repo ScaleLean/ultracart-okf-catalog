@@ -16,7 +16,7 @@ else in the ontology restates identity rules.
 | Encoding | Format | Where |
 |---|---|---|
 | `email_hash_b64` | 44-char **base64** of sha256(lower(trim(email))) | UltraCart warehouse everywhere: `billing.email_hash`, `emails.email_hash`, towerdata, storefront customer tables |
-| `customer_key_hex` | 64-char lowercase **hex** of the same digest | Common in downstream dbt/warehouse layers (e.g. `TO_HEX(SHA256(LOWER(TRIM(email))))`) |
+| `customer_key_hex` | 64-char lowercase **hex** of the same digest | Common in downstream warehouse layers (not used by this ontology, which keys on the base64 hash) (e.g. `TO_HEX(SHA256(LOWER(TRIM(email))))`) |
 
 **Bridges (verified live 2026-07-05, 97% join on a real merchant; naive string join = 0%):**
 

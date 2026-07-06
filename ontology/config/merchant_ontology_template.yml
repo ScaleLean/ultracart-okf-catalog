@@ -19,13 +19,13 @@ dataset:
 ontology_project: "YOUR_BILLING_PROJECT"
 ontology_dataset: "ontology"
 
-# Optional: rebind an object's source to a different table (e.g. a dbt model that
+# Optional: rebind an object's source to a different table (e.g. a view that
 # already unifies channels). The property contract (names/meanings) may not change;
 # the compiler validates that every property's source expression still resolves.
 # NOTE: rebinding skips the standard merchant_filter — the bound table must already
 # be single-merchant.
 bindings: {}
-#  customer: "my-project.dbt_production_core.core_customers"
+#  customer: "my-project.reporting.core_customers"
 
 # Optional: override named-definition parameters.
 parameters: {}
