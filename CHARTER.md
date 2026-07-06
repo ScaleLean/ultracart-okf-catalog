@@ -38,6 +38,7 @@ Chris or an interactive agent should refresh gcloud auth (`gcloud auth login` or
 This project implements an Open Knowledge Format layer for UltraCart BigQuery warehouse projects. It is a reusable catalog/read layer, not a competing source of truth for project status or dbt logic.
 
 Guardrails:
+- **Publish-as-you-go (owner-approved 2026-07-06):** after committing merchant-neutral work here, `git push origin main` in the same session — GitHub (ScaleLean/ultracart-okf-catalog) is the live backup/publication surface. Merchant-specific content stays gitignored (`configs/local*`, `ontology/config/local/`, `ontology/build/`); when a commit adds new content, grep the tree for merchant identifiers before pushing (identifiers already public in layer 1, like ML table names, are acceptable).
 - Do not query or store raw customer rows, raw emails, addresses, payment fields, session payloads, conversation bodies, or sampled rows.
 - Generate concept docs from BigQuery metadata only.
 - Treat generated bundles as merchant-specific local artifacts unless reviewed for public sharing.
