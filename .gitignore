@@ -23,3 +23,5 @@ reports/*
 # Local configs may contain project identifiers for specific merchants.
 configs/local*.yml
 configs/*local*.yaml
+ontology/build/
+ontology/config/local/

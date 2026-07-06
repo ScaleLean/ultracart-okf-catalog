@@ -1,0 +1,36 @@
+# Merchant instantiation config for the UltraCart Store Ontology.
+# Copy to config/local/<merchant>.yml (gitignored) and fill in.
+# Compile: python3 scripts/compile_ontology.py --config config/local/<merchant>.yml
+
+okf_ontology_version: "0.1"
+merchant_id: "YOUR_MERCHANT_ID"          # e.g. the UltraCart merchant code
+source_project: "ultracart-dw-XXXX"      # the merchant's UltraCart warehouse GCP project
+billing_project: "YOUR_BILLING_PROJECT"  # where compiled views live + queries bill
+
+# Standard dataset tier names; override only if the merchant's warehouse differs.
+dataset:
+  dw: ultracart_dw
+  low: ultracart_dw_low
+  medium: ultracart_dw_medium
+  high: ultracart_dw_high
+  streaming: ultracart_dw_streaming
+
+# Where compiled ontology views are created.
+ontology_project: "YOUR_BILLING_PROJECT"
+ontology_dataset: "ontology"
+
+# Optional: rebind an object's source to a different table (e.g. a dbt model that
+# already unifies channels). The property contract (names/meanings) may not change;
+# the compiler validates that every property's source expression still resolves.
+# NOTE: rebinding skips the standard merchant_filter — the bound table must already
+# be single-merchant.
+bindings: {}
+#  customer: "my-project.dbt_production_core.core_customers"
+
+# Optional: override named-definition parameters.
+parameters: {}
+#  lapsed_window_days: 365
+
+# Optional: objects to skip compiling (they remain documented).
+exclude_objects: []
+#  - screen_recording
