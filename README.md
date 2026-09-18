@@ -4,6 +4,27 @@ This repository contains a merchant-neutral Open Knowledge Format toolkit for Ul
 
 The tracked standard catalog lives at the repository root so GitHub links like `tables/ultracart_dw_medium/uc_orders.md` resolve directly. The same generated bundle is also kept at `okf/ultracart_warehouse/` for local generation and validation workflows. Merchant-specific generated bundles should stay local unless they have been reviewed for the intended audience.
 
+## Format and validation
+
+The catalog targets **Google Open Knowledge Format 0.2**.
+The upstream pin and migration checks are in [the migration guide](docs/okf-0.2-migration.md).
+The complete conformant bundle is `okf/ultracart_warehouse/`.
+The repository root mirrors its catalog files for GitHub navigation.
+Repository guidance, reports, and the separate ontology are not part of that bundle.
+
+Install the local validation dependency before the README checks:
+
+```sh
+python3 -m venv /tmp/ultracart-okf-venv
+. /tmp/ultracart-okf-venv/bin/activate
+python3 -m pip install -r requirements.txt
+python3 -m unittest discover -s tests -v
+```
+
+The agent-usability audit has two existing failures in ontology SQL definitions.
+The migration does not change those definitions or weaken that audit.
+See the migration guide for the exact baseline.
+
 ## Standard Catalog
 
 The public standard catalog currently defines:

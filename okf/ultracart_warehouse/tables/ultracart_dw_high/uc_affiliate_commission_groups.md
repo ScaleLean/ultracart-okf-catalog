@@ -10,7 +10,9 @@ tags:
   - "ultracart_dw_high"
   - "uc_affiliate_commission_groups"
   - "affiliate_commissions"
-timestamp: "2026-07-01T00:00:00Z"
+generated:
+  by: process:build_standard_okf_catalog
+  at: "2026-07-01T00:00:00Z"
 ---
 
 # ultracart_dw_high.uc_affiliate_commission_groups

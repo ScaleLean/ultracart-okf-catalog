@@ -85,19 +85,10 @@ def yaml_quote(value: Any) -> str:
 
 
 def write_doc(path: Path, frontmatter: dict[str, Any], body: str) -> None:
-    lines = ["---"]
-    for key, value in frontmatter.items():
-        if isinstance(value, list):
-            lines.append(f"{key}:")
-            for item in value:
-                lines.append(f"  - {yaml_quote(item)}")
-        else:
-            lines.append(f"{key}: {yaml_quote(value)}")
-    lines.append("---")
-    lines.append("")
-    lines.append(body.rstrip())
+    from okf_document import upgrade, serialize
+    frontmatter, body = upgrade(frontmatter, body, "process:augment_okf_scalelean_views")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    path.write_text(serialize(frontmatter, body.rstrip() + "\n"), encoding="utf-8")
 
 
 def write_plain(path: Path, body: str) -> None:
@@ -260,7 +251,7 @@ def write_project_doc(bundle: Path, project: str, generated_at: str, views: list
             "resource": bq_resource(project),
             "tags": ["scale-lean", "bigquery", "downstream-views", "ultracart", "okf"],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/augment_okf_scalelean_views.py",
             "source_project": project,
             "relationship_to_bundle": "downstream_consumer",
@@ -353,7 +344,7 @@ def write_view_doc(bundle: Path, view: dict[str, Any], generated_at: str, source
             "resource": bq_resource(project, dataset, view_name),
             "tags": ["scale-lean", "bigquery", "downstream-view", "ultracart", dataset, view_name, sensitivity],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/augment_okf_scalelean_views.py",
             "source_project": project,
             "source_dataset": dataset,
@@ -430,7 +421,7 @@ def write_indexes(bundle: Path, generated_at: str, views: list[dict[str, Any]], 
             "resource": bq_resource("scale-lean"),
             "tags": ["scale-lean", "downstream-views", "relationships", "ultracart", "okf"],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/augment_okf_scalelean_views.py",
             "source_project": "scale-lean",
             "relationship_to_bundle": "downstream_consumer",

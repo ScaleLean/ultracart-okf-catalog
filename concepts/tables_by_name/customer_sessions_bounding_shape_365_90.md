@@ -9,7 +9,9 @@ tags:
   - "canonical_table"
   - "customer_sessions_bounding_shape_365_90"
   - "ml"
-timestamp: "2026-07-01T00:00:00Z"
+generated:
+  by: process:build_standard_okf_catalog
+  at: "2026-07-01T00:00:00Z"
 ---
 
 # customer_sessions_bounding_shape_365_90

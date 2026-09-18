@@ -1,7 +1,7 @@
 # Merchant-neutral template for scripts/build_ultracart_okf.py.
 # Copy this file to configs/local.yml and fill in projects you are authorized to inspect.
 
-okf_version: "0.1"
+okf_version: "0.2"
 bundle_name: "UltraCart BigQuery Warehouse"
 source_project: "YOUR_ULTRACART_DW_PROJECT"
 billing_project: "YOUR_BILLING_PROJECT"

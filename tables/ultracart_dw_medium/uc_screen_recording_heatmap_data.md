@@ -10,7 +10,9 @@ tags:
   - "ultracart_dw_medium"
   - "uc_screen_recording_heatmap_data"
   - "attribution_sessions"
-timestamp: "2026-07-01T00:00:00Z"
+generated:
+  by: process:build_standard_okf_catalog
+  at: "2026-07-01T00:00:00Z"
 ---
 
 # ultracart_dw_medium.uc_screen_recording_heatmap_data

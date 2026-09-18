@@ -16,7 +16,7 @@ LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 CATALOG_DIRS = ["_source_metadata", "concepts", "datasets", "references", "tables"]
 CATALOG_FILES = ["index.md", "log.md", "viz.html"]
 CATALOG_MARKDOWN_DIRS = ["concepts", "datasets", "references", "tables"]
-REQUIRED_FRONTMATTER = {"type", "title", "description", "resource", "timestamp"}
+REQUIRED_FRONTMATTER = {"type", "title", "description", "resource", "generated"}
 FORBIDDEN_TERMS = [
     "".join(chr(code) for code in [99, 101, 102]),
     "".join(chr(code) for code in [99, 108, 105, 110, 105, 99, 97, 108]),
@@ -24,34 +24,11 @@ FORBIDDEN_TERMS = [
 CUSTOM_WORK_DATASET = "_".join(["ultracart", "dw", "work"])
 
 
-def parse_frontmatter(path: Path) -> tuple[dict[str, object], str] | None:
+def parse_frontmatter(path):
     text = path.read_text(encoding="utf-8")
-    match = FRONTMATTER_RE.match(text)
-    if not match:
-        return None
-    raw, body = match.groups()
-    data: dict[str, object] = {}
-    current: str | None = None
-    for line in raw.splitlines():
-        if not line.strip():
-            continue
-        if line.startswith("  - ") and current:
-            data.setdefault(current, [])
-            if isinstance(data[current], list):
-                data[current].append(line[4:].strip().strip('"'))
-            continue
-        if ":" not in line:
-            continue
-        key, value = line.split(":", 1)
-        key = key.strip()
-        value = value.strip()
-        if value:
-            data[key] = value.strip('"')
-            current = None
-        else:
-            data[key] = []
-            current = key
-    return data, body
+    from okf_document import parse
+    result = parse(text)
+    return result
 
 
 def rel(root: Path, path: Path) -> str:

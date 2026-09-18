@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate OKF v0.1 conformance plus project-specific quality gates."""
+"""Validate OKF v0.2 conformance plus optional UltraCart quality gates."""
 
 from __future__ import annotations
 
@@ -16,36 +16,13 @@ LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 RAW_EMAIL_RE = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
 SECRET_RE = re.compile(r"\b(sk-[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{20,}|xox[baprs]-[A-Za-z0-9-]+)\b")
 RESERVED = {"index.md", "log.md"}
-PRODUCER_REQUIRED = {"type", "title", "description", "resource", "timestamp"}
+PRODUCER_REQUIRED = {"type", "title", "description", "resource", "generated"}
 
 
-def parse_frontmatter(text: str) -> tuple[dict[str, object], str] | None:
-    match = FRONTMATTER_RE.match(text)
-    if not match:
-        return None
-    raw, body = match.groups()
-    data: dict[str, object] = {}
-    current: str | None = None
-    for line in raw.splitlines():
-        if not line.strip():
-            continue
-        if line.startswith("  - ") and current:
-            data.setdefault(current, [])
-            if isinstance(data[current], list):
-                data[current].append(line[4:].strip().strip('"'))
-            continue
-        if ":" not in line:
-            continue
-        key, value = line.split(":", 1)
-        key = key.strip()
-        value = value.strip()
-        if value:
-            data[key] = value.strip('"')
-            current = None
-        else:
-            data[key] = []
-            current = key
-    return data, body
+def parse_frontmatter(text):
+    from okf_document import parse
+    result = parse(text)
+    return result
 
 
 def concept_paths(bundle: Path) -> list[Path]:
@@ -60,7 +37,7 @@ def rel_id(bundle: Path, path: Path) -> str:
     return "/" + str(path.relative_to(bundle)).replace("\\", "/")
 
 
-def check_frontmatter(bundle: Path, errors: list[str]) -> None:
+def check_frontmatter(bundle: Path, errors: list[str], producer: bool = True) -> None:
     for path in concept_paths(bundle):
         parsed = parse_frontmatter(path.read_text(encoding="utf-8"))
         if parsed is None:
@@ -69,9 +46,24 @@ def check_frontmatter(bundle: Path, errors: list[str]) -> None:
         fm, _ = parsed
         if not str(fm.get("type") or "").strip():
             errors.append(f"{rel_id(bundle, path)}: frontmatter.type is required")
-        missing = sorted(key for key in PRODUCER_REQUIRED if not str(fm.get(key) or "").strip())
+        missing = sorted(key for key in PRODUCER_REQUIRED if producer and not str(fm.get(key) or "").strip())
         if missing:
             errors.append(f"{rel_id(bundle, path)}: missing producer-required keys {missing}")
+        if producer:
+            from datetime import datetime
+            generated = fm.get("generated")
+            if not isinstance(generated, dict) or not generated.get("by"):
+                errors.append(f"{rel_id(bundle, path)}: generated.by is required by this producer")
+            else:
+                try:
+                    stamp = str(generated.get("at", ""))
+                    instant = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+                    if "T" not in stamp or instant.tzinfo is None:
+                        raise ValueError("missing timezone")
+                except ValueError:
+                    errors.append(f"{rel_id(bundle, path)}: generated.at must have an explicit timezone")
+            if "timestamp" in fm:
+                errors.append(f"{rel_id(bundle, path)}: migrate timestamp to generated.at")
 
 
 def check_reserved(bundle: Path, errors: list[str]) -> None:
@@ -182,6 +174,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate an OKF bundle.")
     parser.add_argument("bundle", type=Path)
     parser.add_argument("--expect-table-count", type=int)
+    parser.add_argument("--conformance-only", action="store_true", help="Apply only SPEC 0.2 section 11, not UltraCart coverage or link gates.")
     args = parser.parse_args()
     bundle = args.bundle
     errors: list[str] = []
@@ -190,17 +183,21 @@ def main() -> int:
         print(f"Bundle does not exist: {bundle}", file=sys.stderr)
         return 2
 
-    check_frontmatter(bundle, errors)
+    check_frontmatter(bundle, errors, producer=not args.conformance_only)
     check_reserved(bundle, errors)
-    check_links(bundle, errors)
-    check_safety(bundle, errors)
-    check_coverage(bundle, args.expect_table_count, errors)
+    if not args.conformance_only:
+        check_links(bundle, errors)
+        check_safety(bundle, errors)
+        check_coverage(bundle, args.expect_table_count, errors)
 
     if errors:
         print("OKF validation failed:")
         for error in errors:
             print(f"- {error}")
         return 1
+    if args.conformance_only:
+        print(f"OKF 0.2 conformance passed: {len(concept_paths(bundle))} concepts.")
+        return 0
     summary = json.loads((bundle / "_source_metadata" / "source_summary.json").read_text(encoding="utf-8"))
     print(
         "OKF validation passed: "

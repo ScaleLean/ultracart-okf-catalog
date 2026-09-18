@@ -1518,6 +1518,6 @@
       "object_type": "BASE TABLE"
     }
   ],
-  "okf_version": "0.1",
+  "okf_version": "0.2",
   "source_kind": "metadata_only_standard_catalog"
 }

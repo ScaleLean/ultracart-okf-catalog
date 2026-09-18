@@ -10,7 +10,9 @@ tags:
   - "ultracart_dw_low"
   - "uc_orders"
   - "commerce_core"
-timestamp: "2026-07-01T00:00:00Z"
+generated:
+  by: process:build_standard_okf_catalog
+  at: "2026-07-01T00:00:00Z"
 ---
 
 # ultracart_dw_low.uc_orders

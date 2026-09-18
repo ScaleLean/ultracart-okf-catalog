@@ -9,7 +9,9 @@ tags:
   - "canonical_table"
   - "retention_score_22382_365_90"
   - "ml"
-timestamp: "2026-07-01T00:00:00Z"
+generated:
+  by: process:build_standard_okf_catalog
+  at: "2026-07-01T00:00:00Z"
 ---
 
 # retention_score_22382_365_90

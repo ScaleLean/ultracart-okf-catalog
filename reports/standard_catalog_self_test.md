@@ -7,7 +7,7 @@ The generated OKF bundle was loaded and queried locally as a metadata catalog.
 - Dataset count: 8
 - Dataset-specific object docs: 244
 - Canonical table definitions: 112
-- Total concept docs loaded: 368
+- Total concept docs loaded: 370
 - `uc_orders` role and `order_id` field path found.
 - `uc_items` role and `merchant_item_oid` field path found.
 - Merchant-specific custom work datasets were not found in table docs or source summary.
