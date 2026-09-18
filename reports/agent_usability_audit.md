@@ -4,7 +4,7 @@ This report checks whether the repository is directly usable by AI agents readin
 
 ## Result
 
-PASS
+FAIL
 
 ## Coverage
 
@@ -12,11 +12,11 @@ PASS
 - dataset_specific_objects: 244
 - canonical_table_definitions: 112
 - root_table_docs: 244
-- root_concept_docs: 368
-- internal_links_checked: 2099
-- mirrored_files_checked: 384
+- root_concept_docs: 370
+- internal_links_checked: 2105
+- mirrored_files_checked: 386
 - mirror_mismatches: 0
-- safety_files_scanned: 812
+- safety_files_scanned: 889
 
 ## Gates
 
@@ -29,4 +29,5 @@ PASS
 
 ## Errors
 
-- None.
+- ontology/definitions/repeat_customer.md: unsafe SELECT star pattern
+- ontology/definitions/revenue_order.md: unsafe SELECT star pattern

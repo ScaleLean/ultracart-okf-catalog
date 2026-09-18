@@ -8,38 +8,17 @@ import html
 import json
 import re
 from pathlib import Path
+from okf_document import trust_tier
 
 
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n?(.*)\Z", re.S)
 LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 
-def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
-    match = FRONTMATTER_RE.match(text)
-    if not match:
-        return {}, text
-    raw, body = match.groups()
-    data: dict[str, object] = {}
-    current: str | None = None
-    for line in raw.splitlines():
-        if not line.strip():
-            continue
-        if line.startswith("  - ") and current:
-            data.setdefault(current, [])
-            if isinstance(data[current], list):
-                data[current].append(line[4:].strip().strip('"'))
-            continue
-        if ":" in line:
-            key, value = line.split(":", 1)
-            key = key.strip()
-            value = value.strip()
-            if value:
-                data[key] = value.strip('"')
-                current = None
-            else:
-                data[key] = []
-                current = key
-    return data, body
+def parse_frontmatter(text):
+    from okf_document import parse
+    result = parse(text)
+    return result or ({}, text)
 
 
 def concept_id(bundle: Path, path: Path) -> str:
@@ -87,6 +66,7 @@ def load_bundle(bundle: Path) -> dict[str, object]:
                 "description": frontmatter.get("description") or "",
                 "tags": frontmatter.get("tags") or [],
                 "frontmatter": frontmatter,
+                "trust": trust_tier(frontmatter),
                 "body": body,
                 "edges": extract_edges(bundle, path, body, existing),
             }
@@ -96,7 +76,7 @@ def load_bundle(bundle: Path) -> dict[str, object]:
 
 
 def build_html(bundle_name: str, data: dict[str, object]) -> str:
-    payload = json.dumps(data, ensure_ascii=False)
+    payload = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -327,6 +307,11 @@ function render() {{
     <h2>${{escapeHtml(doc.title)}}</h2>
     <p>${{escapeHtml(doc.description)}}</p>
     <div class="meta">
+      <div><strong>Trust</strong><br>${{escapeHtml(doc.trust)}}</div>
+      <div><strong>Generated</strong><br>${{escapeHtml(doc.frontmatter.generated?.at || doc.frontmatter.timestamp || "Not recorded")}}</div>
+      <div><strong>Lifecycle</strong><br>${{escapeHtml(doc.frontmatter.status || "stable")}}</div>
+      <div><strong>Stale</strong><br>${{doc.frontmatter.stale_after ? Date.now() >= Date.parse(doc.frontmatter.stale_after) : false}}</div>
+      <div><strong>Sources</strong><br>${{escapeHtml(JSON.stringify(doc.frontmatter.sources || []))}}</div>
       <div><strong>Concept</strong><br>${{escapeHtml(doc.id)}}</div>
       <div><strong>Outgoing links</strong><br>${{outgoing.length}}</div>
       <div><strong>Cited by</strong><br>${{incoming.length}}</div>

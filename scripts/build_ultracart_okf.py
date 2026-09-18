@@ -150,19 +150,10 @@ def yaml_quote(value: Any) -> str:
 
 
 def write_doc(path: Path, frontmatter: dict[str, Any], body: str) -> None:
-    lines = ["---"]
-    for key, value in frontmatter.items():
-        if isinstance(value, list):
-            lines.append(f"{key}:")
-            for item in value:
-                lines.append(f"  - {yaml_quote(item)}")
-        else:
-            lines.append(f"{key}: {yaml_quote(value)}")
-    lines.append("---")
-    lines.append("")
-    lines.append(body.rstrip())
+    from okf_document import upgrade, serialize
+    frontmatter, body = upgrade(frontmatter, body, "process:build_ultracart_okf")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    path.write_text(serialize(frontmatter, body.rstrip() + "\n"), encoding="utf-8")
 
 
 def write_plain(path: Path, body: str) -> None:
@@ -601,7 +592,7 @@ def write_project_doc(bundle: Path, metadata: dict[str, Any], generated_at: str,
             "resource": bq_resource(project),
             "tags": tags + ["bigquery-project"],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/build_ultracart_okf.py",
             "source_project": project,
         },
@@ -665,7 +656,7 @@ def write_dataset_doc(bundle: Path, project: str, ds: dict[str, Any], generated_
             "resource": bq_resource(project, dataset_id),
             "tags": tags + ["bigquery-dataset", dataset_id],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/build_ultracart_okf.py",
             "source_project": project,
             "source_dataset": dataset_id,
@@ -784,7 +775,7 @@ def write_table_doc(
             "resource": bq_resource(project, dataset_id, table_id),
             "tags": tags + ["bigquery-table", dataset_id, table_id, sensitivity],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/build_ultracart_okf.py",
             "source_project": project,
             "source_dataset": dataset_id,
@@ -802,7 +793,7 @@ def write_indexes(bundle: Path, metadata: dict[str, Any], generated_at: str) -> 
     table_count = sum(len(ds["tables"]) for ds in metadata["datasets"])
     root = [
         "---",
-        'okf_version: "0.1"',
+        'okf_version: "0.2"',
         "---",
         "",
         f"# {project} OKF Bundle",
@@ -884,7 +875,7 @@ def write_references(bundle: Path, metadata: dict[str, Any], generated_at: str, 
             "resource": bq_resource(project),
             "tags": tags + ["generator-policy", "safety"],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/build_ultracart_okf.py",
         },
         "\n".join(
@@ -940,7 +931,7 @@ def write_references(bundle: Path, metadata: dict[str, Any], generated_at: str, 
             "resource": bq_resource(project),
             "tags": tags + ["table-families", "inferred"],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/build_ultracart_okf.py",
         },
         "\n".join(lines),
@@ -974,7 +965,7 @@ def write_references(bundle: Path, metadata: dict[str, Any], generated_at: str, 
             "resource": bq_resource(project),
             "tags": tags + ["generation-run"],
             "timestamp": generated_at,
-            "okf_version": "0.1",
+            "okf_version": "0.2",
             "generated_by": "scripts/build_ultracart_okf.py",
         },
         "\n".join(run_lines),

@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 GENERATED_AT = "2026-07-01T00:00:00Z"
-OKF_VERSION = "0.1"
+OKF_VERSION = "0.2"
 EXCLUDED_STANDARD_DATASETS = {"_".join(["ultracart", "dw", "work"])}
 
 
@@ -345,20 +345,9 @@ def q(value: str) -> str:
 
 
 def yaml_frontmatter(items: dict[str, object]) -> str:
-    lines = ["---"]
-    for key, value in items.items():
-        if isinstance(value, list):
-            lines.append(f"{key}:")
-            for item in value:
-                lines.append(f"  - {q(str(item))}")
-        elif isinstance(value, bool):
-            lines.append(f"{key}: {'true' if value else 'false'}")
-        elif isinstance(value, int):
-            lines.append(f"{key}: {value}")
-        else:
-            lines.append(f"{key}: {q(str(value))}")
-    lines.append("---")
-    return "\n".join(lines) + "\n\n"
+    from okf_document import upgrade, serialize
+    items, _ = upgrade(items, "", "process:build_standard_okf_catalog")
+    return serialize(items)
 
 
 def slugify(value: str) -> str:

@@ -9,7 +9,9 @@ tags:
   - "reference"
   - "money"
   - "currency"
-timestamp: "2026-07-01T00:00:00Z"
+generated:
+  by: process:build_standard_okf_catalog
+  at: "2026-07-01T00:00:00Z"
 ---
 
 # Monetary Field Patterns

@@ -1,0 +1,34 @@
+name: OKF validation
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/validate_okf_bundle.py okf/ultracart_warehouse --expect-table-count 244
+      - run: python scripts/validate_okf_bundle.py okf/ultracart_warehouse --conformance-only
+      - run: python scripts/self_test_standard_catalog.py okf/ultracart_warehouse
+      - name: Check idempotent migration
+        run: |
+          python scripts/migrate_okf_02.py
+          git diff --exit-code -- concepts datasets references tables _source_metadata index.md log.md viz.html okf/ultracart_warehouse
+      - name: Fetch the pinned Google reference
+        run: |
+          git init /tmp/okf-reference
+          git -C /tmp/okf-reference remote add origin https://github.com/GoogleCloudPlatform/open-knowledge-format.git
+          git -C /tmp/okf-reference fetch --depth 1 origin ad30107c31c06aec8a7d5636e0d1058118604e6f
+          git -C /tmp/okf-reference checkout --detach FETCH_HEAD
+      - run: python scripts/validate_upstream_okf.py /tmp/okf-reference okf/ultracart_warehouse
+      - name: Full usability audit (known ontology baseline failures)
+        continue-on-error: true
+        run: python scripts/audit_agent_usability.py

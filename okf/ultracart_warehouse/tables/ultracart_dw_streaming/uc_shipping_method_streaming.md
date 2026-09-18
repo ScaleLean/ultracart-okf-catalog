@@ -10,7 +10,9 @@ tags:
   - "ultracart_dw_streaming"
   - "uc_shipping_method_streaming"
   - "streaming"
-timestamp: "2026-07-01T00:00:00Z"
+generated:
+  by: process:build_standard_okf_catalog
+  at: "2026-07-01T00:00:00Z"
 ---
 
 # ultracart_dw_streaming.uc_shipping_method_streaming

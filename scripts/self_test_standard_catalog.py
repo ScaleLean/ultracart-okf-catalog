@@ -13,18 +13,11 @@ FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n?(.*)\Z", re.S)
 CUSTOM_WORK_DATASET = "_".join(["ultracart", "dw", "work"])
 
 
-def parse_frontmatter(path: Path) -> tuple[dict[str, str], str]:
+def parse_frontmatter(path):
     text = path.read_text(encoding="utf-8")
-    match = FRONTMATTER_RE.match(text)
-    if not match:
-        return {}, text
-    raw, body = match.groups()
-    data: dict[str, str] = {}
-    for line in raw.splitlines():
-        if ":" in line and not line.startswith("  - "):
-            key, value = line.split(":", 1)
-            data[key.strip()] = value.strip().strip('"')
-    return data, body
+    from okf_document import parse
+    result = parse(text)
+    return result or ({}, text)
 
 
 def assert_true(condition: bool, message: str) -> None:
