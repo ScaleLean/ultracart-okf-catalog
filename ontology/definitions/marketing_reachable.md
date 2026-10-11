@@ -3,9 +3,48 @@ type: "Ontology Definition"
 definition: marketing_reachable
 resource: "urn:ultracart:ontology:definition:marketing_reachable"
 version: 1
-summary: "Contacts a merchant may actually email marketing to: positive consent state (not globally unsubscribed) minus anyone who has ever filed a spam complaint."
+summary: "Modeled suppression eligibility: contacts not globally unsubscribed, excluding recorded spam complainers; no affirmative consent guarantee."
+outputs:
+  esp_customer_uuid: STRING
+  email_hash_b64: STRING
+  merchant_id: STRING
+  global_unsubscribed: BOOLEAN
+  is_emailable: BOOLEAN
+  consecutive_emails_unopened: INTEGER
+  consecutive_emails_unclicked: INTEGER
+  email_send_count: INTEGER
+  emails_opened_count: INTEGER
+  emails_clicked_count: INTEGER
+  emails_converted_count: INTEGER
+  spam_complaint_count: INTEGER
+  last_email_sent_at: DATETIME
+  last_email_opened_at: DATETIME
+  last_email_clicked_at: DATETIME
+  list_count: INTEGER
+  segment_count: INTEGER
+  session_count: INTEGER
+  last_session_at: DATETIME
 sql: |
-  SELECT mc.*
+  SELECT
+    mc.esp_customer_uuid,
+    mc.email_hash_b64,
+    mc.merchant_id,
+    mc.global_unsubscribed,
+    mc.is_emailable,
+    mc.consecutive_emails_unopened,
+    mc.consecutive_emails_unclicked,
+    mc.email_send_count,
+    mc.emails_opened_count,
+    mc.emails_clicked_count,
+    mc.emails_converted_count,
+    mc.spam_complaint_count,
+    mc.last_email_sent_at,
+    mc.last_email_opened_at,
+    mc.last_email_clicked_at,
+    mc.list_count,
+    mc.segment_count,
+    mc.session_count,
+    mc.last_session_at
   FROM {{ontology}}.marketing_contact AS mc
   LEFT JOIN (
     SELECT DISTINCT esp_customer_uuid
@@ -19,31 +58,16 @@ sql: |
 
 # marketing_reachable
 
-The honest audience size: who may **actually** be sent marketing email. Two
-subtractions from the marketing-contact population:
+A modeled suppression filter over `marketing_contact`: `is_emailable` is true
+and no recorded `email_send.spam_complaint` exists for the ESP profile.
+Absence of suppression is not affirmative consent, legal sendability, verified
+deliverability or authorization for any action. Unknown/null eligibility is
+excluded by SQL's WHERE semantics. Missing complaint events may affect coverage.
 
-1. **Consent**: `marketing_contact.is_emailable` — the derived positive of the
-   person-level `global_unsubscribed` kill switch. List/segment membership is
-   targeting, not consent, and does not appear here.
-2. **Spam complainers**: anyone with a `spam_complaint` on any send in
-   `{{ontology}}.email_send` — ever. A complaint is a hard suppression signal
-   even when the ESP still shows the contact as emailable: mailing complainers
-   again is how sending domains die. (`marketing_contact.spam_complaint_count`
-   is the rollup of the same events; the join to `email_send` keeps this
-   definition anchored to the event-grain source of truth.)
-
-Uses:
-- **Audience denominator** for open/click rates that mean something.
-- **Pre-flight gate** for the send-side actions: `send_campaign` audience checks
-  and any flow enrollment should intersect with this view.
-- Reachability ≠ engagement: a contact ignored for two years
-  (`consecutive_emails_unopened` high) is reachable but a sunset-policy
-  candidate — engagement tiers are a separate (overlay) definition.
-
-Edges: contacts are per-storefront ESP profiles (`esp_customer_uuid` grain, same
-as `marketing_contact`); the same human under two storefronts is two rows, which
-is correct for send-planning. Transactional email (receipts) is out of scope —
-that surface ignores marketing consent by design.
+The grain remains `esp_customer_uuid`, per storefront ESP profile, rather than a
+unique human across storefronts. Engagement and transactional email are separate
+concerns. Merchants must apply their approved consent and send-time policies;
+this change preserves the existing SQL suppression policy.
 
 ## Change log
 - v1 (2026-07-06) — initial.

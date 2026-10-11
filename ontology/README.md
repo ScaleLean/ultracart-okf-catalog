@@ -24,27 +24,31 @@ project re-deriving those from 112 tables and 1,000+ field paths.
 1. `SPEC.md` — the file formats (5 min; skip if only consuming).
 2. `identity/identity_spine.md` — key families, the base64/hex email-hash bridge,
    merchant_id scoping, dedup rules. **Read before writing any query.**
-3. `objects/<domain>/` — the object you care about; frontmatter is machine-truth,
+3. `objects/<domain>/` — the object you care about; frontmatter is a declared contract,
    prose has the gotchas.
 4. `definitions/` — named definitions (revenue_order, customer, active_subscriber,
-   lapsed_subscriber, …). **Never re-derive these in project SQL.**
+   lapsed_subscriber, …). Review these conventions with the merchant before analytical use.
 5. `actions/` — what may be written back, and the guards required.
 6. `links/link_graph.md` + `links/coverage_ledger.md` — generated indexes: the join
    graph, and every warehouse table's ontology role.
 
 ## Instantiating for a merchant
 
-```bash
-cp config/merchant_ontology_template.yml config/local/<merchant>.yml   # fill in
-python3 scripts/validate_ontology.py --offline                        # no auth needed
-python3 scripts/compile_ontology.py --config config/local/<merchant>.yml
-bq query --project_id=<billing> --use_legacy_sql=false < build/<merchant>/ontology_views.sql
-python3 scripts/validate_ontology.py --compiled config/local/<merchant>.yml
+Run the structural offline checks from the repository root:
+
+```sh
+python3 ontology/scripts/validate_ontology.py --offline
 ```
 
-Merchant overlays may **rebind** an object to their own model (e.g. a view that
-unifies Amazon + UltraCart orders) without changing the property contract — see
-`bindings:` in the config template.
+For a separately approved local review, supply explicit source/output identifiers
+and selected datasets in a private config. The compiler requires
+`--offline-preview` and supports `--out /path/to/scratch`; its output is unverified
+review SQL, never deployment approval. Ordinary compilation refuses because live
+scope, uniqueness/grain and derived expression semantics cannot be established
+offline. Binding overrides, linked-account and streaming sources are rejected.
+Existing merchant filters remain present. Sources without a filter are explicitly
+unresolved in the manifest, not assumed single-merchant. Private overlays remain
+private and require their own validation route.
 
 ## How big is the warehouse, really?
 
@@ -72,13 +76,13 @@ coverage ledger, deliberately not modeled as objects).
 
 ## Design commitments
 
-- **Hash-keyed identity everywhere** (`email_hash_b64`); raw PII is never selected —
-  the compiled views are safe at every dataset tier, including the redacted ones.
-- **Compiled SQL only** — object files are the single source of truth; hand-edited
-  merchant SQL is a spec violation.
-- **Offline drift detection** — every property mapping is validated against layer-1
-  field paths without BigQuery credentials; when UltraCart changes the warehouse,
-  regenerate layer 1 and the validator pinpoints every broken mapping.
+- **Pseudonymous identity** — hash keys remain sensitive. Field selection does not
+  establish PII safety, access permission or safety at every tier.
+- **Local review SQL** — source expressions remain the declared mapping; offline
+  previews preserve filters and carry explicit trust limits.
+- **Historical schema checks** — selected dataset fields and direct types are
+  checked offline. This catches differences in recorded metadata, not live drift.
+  Derived output types, uniqueness, joins and business policy remain unverified.
 - **Declared ≠ permitted** — the actions catalog documents the API's full mutation
   surface; executing anything requires a merchant-registered implementation with
   guards (see `actions/README.md`).
@@ -92,7 +96,15 @@ coverage ledger, deliberately not modeled as objects).
 
 ## Provenance
 
-Built 2026-07-06 from: OKF layer-1 field paths (112 canonical tables), UltraCart's
+Historical build report dated 2026-07-06 (not reverified by this update), from:
+OKF layer-1 field paths (112 canonical tables), UltraCart's
 live OpenAPI spec (446 paths; actions catalog), UltraCart's BigQuery DW documentation,
-and verified live-merchant findings (identity bridge, paused-pool semantics). Assembled
+and reported live-merchant findings (identity bridge, paused-pool semantics). Assembled
 by Claude (Fable) with subagent mining; see the workspace charter for the build log.
+
+## Machine consumption
+
+[`../knowledge_manifest.json`](../knowledge_manifest.json) is a versioned sidecar
+outside the OKF 0.2 bundle. It preserves resource URNs and existing discovery,
+records source hashes, historical dates, dependencies, declared output types and
+structural versus semantic trust. See [offline trust limits](../docs/offline-trust.md).

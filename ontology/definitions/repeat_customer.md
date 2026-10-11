@@ -8,8 +8,27 @@ parameters:
   - name: repeat_min_orders
     default: 2
     meaning: "minimum revenue-order count to qualify as a repeat customer; merchants with bundled first purchases sometimes raise it"
+outputs:
+  email_hash_b64: STRING
+  first_order_date: DATE
+  last_order_date: DATE
+  order_count: INTEGER
+  lifetime_total: NUMERIC
+  avg_order_value: NUMERIC
+  days_since_last_order: INTEGER
+  first_order_id: STRING
+  last_order_id: STRING
 sql: |
-  SELECT *
+  SELECT
+    email_hash_b64,
+    first_order_date,
+    last_order_date,
+    order_count,
+    lifetime_total,
+    avg_order_value,
+    days_since_last_order,
+    first_order_id,
+    last_order_id
   FROM {{ontology}}.customer
   WHERE order_count >= {{param.repeat_min_orders}}
 ---

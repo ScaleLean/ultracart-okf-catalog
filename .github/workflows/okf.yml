@@ -29,6 +29,8 @@ jobs:
           git -C /tmp/okf-reference fetch --depth 1 origin ad30107c31c06aec8a7d5636e0d1058118604e6f
           git -C /tmp/okf-reference checkout --detach FETCH_HEAD
       - run: python scripts/validate_upstream_okf.py /tmp/okf-reference okf/ultracart_warehouse
-      - name: Full usability audit (known ontology baseline failures)
-        continue-on-error: true
+      - run: python ontology/scripts/validate_ontology.py --offline
+      - run: python scripts/build_knowledge_manifest.py --check knowledge_manifest.json
+      - run: python -m compileall -q scripts ontology/scripts tests
+      - name: Full usability audit
         run: python scripts/audit_agent_usability.py

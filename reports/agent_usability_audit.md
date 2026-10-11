@@ -4,7 +4,7 @@ This report checks whether the repository is directly usable by AI agents readin
 
 ## Result
 
-FAIL
+PASS
 
 ## Coverage
 
@@ -13,10 +13,10 @@ FAIL
 - canonical_table_definitions: 112
 - root_table_docs: 244
 - root_concept_docs: 370
-- internal_links_checked: 2105
+- internal_links_checked: 2106
 - mirrored_files_checked: 386
 - mirror_mismatches: 0
-- safety_files_scanned: 889
+- safety_files_scanned: 895
 
 ## Gates
 
@@ -25,9 +25,8 @@ FAIL
 - All internal Markdown links resolve against repository-root GitHub paths.
 - Every dataset-specific table page has definition, schema coverage, field paths, query pattern, and references.
 - Expected agent entrypoints exist at root-level GitHub paths.
-- Safety scan found no merchant-specific forbidden terms or unsafe SELECT star examples.
+- Safety scan checks forbidden merchant terms and wildcard projections; it does not verify live safety.
 
 ## Errors
 
-- ontology/definitions/repeat_customer.md: unsafe SELECT star pattern
-- ontology/definitions/revenue_order.md: unsafe SELECT star pattern
+- None.

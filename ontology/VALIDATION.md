@@ -6,6 +6,11 @@ timestamp: "2026-07-06T00:00:00Z"
 
 # Validation record
 
+This is a historical report, preserved as reported evidence. No live verification
+was repeated by the offline trustworthiness update. A dry-run establishes SQL
+acceptance in its original context, not PII safety, uniqueness, correct totals,
+current freshness or a portable merchant contract.
+
 ## 2026-07-06 — v0.1 initial build
 
 **Offline** (`scripts/validate_ontology.py --offline`): PASS, 0 failures —
@@ -20,8 +25,8 @@ identifiers are kept out of this public record; the merchant-side evidence lives
 in that merchant's own workspace.
 
 Notes from the live pass:
-- The `dataset.medium` default binding proved PII-safe and complete: every bound
-  field path resolved in the medium tier.
+- The historical report said every bound field path resolved in that merchant's
+  medium tier. This does not prove PII safety or completeness for other tiers.
 - Definitions compiled in correct dependency order (`revenue_order` → `customer`
   → `repeat_customer`).
 - Bytes-processed estimates ranged from ~24 KB (coupons) to ~2.9 GB (order-scan

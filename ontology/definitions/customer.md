@@ -4,6 +4,16 @@ definition: customer
 resource: "urn:ultracart:ontology:definition:customer"
 version: 1
 summary: "THE canonical customer: every buyer, at email-identity grain — a rollup of revenue orders per email_hash_b64 with first/last order, count, lifetime total, and recency."
+outputs:
+  email_hash_b64: STRING
+  first_order_date: DATE
+  last_order_date: DATE
+  order_count: INTEGER
+  lifetime_total: NUMERIC
+  avg_order_value: NUMERIC
+  days_since_last_order: INTEGER
+  first_order_id: STRING
+  last_order_id: STRING
 sql: |
   SELECT
     email_hash_b64,
@@ -35,14 +45,19 @@ address books); most buyers never register, so profile counts undercount
 customers badly. When someone asks "customers," this definition is the source of
 truth; when they ask "accounts," point them at `customer_profile`.
 
+This is a proposed reporting convention, not a merchant-approved LTV contract.
+Currency consistency, reporting timezone, as-of date, cohort denominator and refund
+policy require review. The total uses `summary.total.value`; the displayed order
+`currency_code` does not establish the monetary sibling currency contract.
+
 Column notes:
 - `lifetime_total` / `avg_order_value` are **gross** (see `revenue_order` — netting
   refunds requires the refunded totals).
 - `first_order_id` / `last_order_id` use the `ARRAY_AGG … ORDER BY order_ts …
-  LIMIT 1` pattern (ties broken arbitrarily but deterministically enough for
-  reporting; `order_ts` is the timestamp, `order_date` the date).
+  LIMIT 1` pattern (ties are unspecified without an additional ordering key;
+  `order_ts` is the timestamp, `order_date` the date).
 - `days_since_last_order` is computed at query time — this compiles to a view, so
-  recency is always current.
+  recency uses query-time CURRENT_DATE() in UTC, not a merchant reporting as-of date.
 - Rows with a NULL email hash (rare imports) are excluded — they cannot be a
   customer identity.
 

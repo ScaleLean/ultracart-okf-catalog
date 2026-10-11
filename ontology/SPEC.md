@@ -24,14 +24,15 @@ merchant-specific arrives through a config file at compile time.
 3. **Identity is first-class.** Key families, hash encodings, and cross-system bridges
    live in `identity/identity_spine.md` and are referenced, not restated.
 4. **Total coverage, explicit tiers.** Every canonical warehouse table appears in
-   `links/coverage_ledger.md` exactly once: as an object's primary source, a property/link
+   `links/coverage_ledger.md` by name: as an object's primary source, a property/link
    source, or an explicitly-documented peripheral. Nothing is silently dropped.
 5. **Actions are declared even when not implemented.** The base ships the catalog of
    *possible* governed writes (mapped to UltraCart REST API v2); merchants register
    implementations with guards. Declared ≠ permitted.
-6. **Offline validation.** Every property's source expression must resolve against the
-   OKF layer-1 field paths (`concepts/tables_by_name/`). Schema drift is caught by
-   diffing OKF, without BigQuery credentials.
+6. **Offline validation.** Source field references must resolve against the selected
+   dataset-specific historical schema (`tables/<dataset>/`). Direct output types
+   and source operand types are checked; derived expression types remain declarations.
+   This detects recorded differences, not live drift.
 
 ## File format — object (`objects/<domain>/<name>.md`)
 
@@ -125,18 +126,30 @@ status: declared                      # declared | registered:<merchant>
 Declares: `merchant_id`, `source_project`, dataset tier names, `ontology_project`,
 `ontology_dataset`, optional `bindings:` overrides (
 table, e.g. a merchant unified view), optional `parameters:` overrides, optional `exclude_objects:`.
-The compiler refuses to run if a binding override changes the property contract
-(names/types) — overrides may change *where* data comes from, never *what the object means*.
+Binding overrides are rejected offline: arbitrary views cannot establish tenant
+scope, current-state grain or expression types. Supported dataset selections use
+their own historical schemas, never the canonical cross-tier union. No filter is
+removed implicitly. Missing declared grain/key or required fields/types fail the
+structural checks. Declared keys do not prove uniqueness.
 
 ## Compiler & validator
 
-- `scripts/compile_ontology.py --config <yml>` → `build/<merchant>/ontology_views.sql`
-  + `build/<merchant>/manifest.json` (object → view → source hash). `build/` is gitignored.
-- `scripts/validate_ontology.py`:
-  - `--offline`: frontmatter completeness, URN uniqueness, link symmetry targets exist,
-    coverage ledger totality, every property source expression's column references exist
-    in the OKF layer-1 field paths for the bound table.
-  - `--compiled <config>`: BigQuery dry-run of every compiled view (needs auth).
+- `scripts/compile_ontology.py --config <yml>` refuses deployable compilation:
+  historical schemas cannot establish scope, uniqueness or derived SQL semantics.
+- With `--offline-preview --out <scratch>`, it emits local unverified review SQL
+  and a versioned manifest. Identifiers and parameter types are bounded; unsupported
+  bindings and unavailable definition dependencies fail before output is written.
+- `scripts/validate_ontology.py --offline [--config <yml>]` checks required object
+  frontmatter, object URN uniqueness, link target existence, ledger name coverage,
+  selected-dataset field/type references, identity-family membership and explicit
+  definition output names/dependencies. It rejects wildcard projections.
+- Link cardinality, exactly-once ledger roles, derived SQL types, PII safety, identity
+  join coverage and merchant business approval are **not** established offline.
+- The existing `--compiled` route needs auth and is outside offline validation;
+  the compiler currently refuses its deployable output for the reasons above.
+- Definition `outputs:` maps explicit output names to declared BigQuery types.
+  These are structural declarations, not semantic attestation. See the sidecar and
+  [offline trust limits](../docs/offline-trust.md) for the machine contract.
 
 ## Versioning
 

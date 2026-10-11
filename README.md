@@ -21,9 +21,9 @@ python3 -m pip install -r requirements.txt
 python3 -m unittest discover -s tests -v
 ```
 
-The agent-usability audit has two existing failures in ontology SQL definitions.
-The migration does not change those definitions or weaken that audit.
-See the migration guide for the exact baseline.
+The usability audit and ontology offline checks are blocking CI gates.
+See [offline knowledge trust](docs/offline-trust.md) for provenance, machine
+consumption and the limits of structural validation.
 
 ## Standard Catalog
 
@@ -53,6 +53,8 @@ Inspect and test the standard catalog with:
 python3 scripts/validate_okf_bundle.py okf/ultracart_warehouse --expect-table-count 244
 python3 scripts/self_test_standard_catalog.py okf/ultracart_warehouse
 python3 scripts/audit_agent_usability.py
+python3 ontology/scripts/validate_ontology.py --offline
+python3 scripts/build_knowledge_manifest.py --check knowledge_manifest.json
 ```
 
 ## Commands
@@ -94,6 +96,10 @@ The tracked standard catalog and generated local bundles normally include:
 - `references/*.md` - warehouse access, usage, monetary field, sensitivity, and source-metadata references.
 - `downstream_views/<project>/` - optional downstream views that reference UltraCart-style sources.
 - `viz.html` - self-contained static viewer.
+
+The separate root `knowledge_manifest.json` provides versioned object/definition
+dependencies, declared output types, source hashes and explicit trust limits.
+It sits outside the complete OKF bundle; catalog discovery paths are preserved.
 
 ## Safety
 
