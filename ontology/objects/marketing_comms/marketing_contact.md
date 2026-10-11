@@ -33,7 +33,7 @@ properties:
   - name: is_emailable
     type: BOOLEAN
     source: "NOT global_unsubscribed"
-    meaning: "derived: may currently be sent marketing email (consent surface for audience counts)"
+    meaning: "derived suppression eligibility: not globally unsubscribed; no affirmative consent evidence"
   - name: consecutive_emails_unopened
     type: INTEGER
     source: consecutive_emails_unopened
@@ -111,19 +111,17 @@ consumers: []
 # MarketingContact
 
 The **marketing-audience person**: one row per ESP customer profile
-(`esp_customer_uuid`), carrying consent state, deliverability counters, and lifetime
-engagement rollups. This is who you may email, whether they still engage, and how
-big your real audience is. It is distinct from `customer` (registered commerce
-profile) and from mere buyers — a marketing contact may have never ordered, and a
-buyer may have no ESP profile.
+(`esp_customer_uuid`), carrying suppression state, deliverability counters, and
+engagement rollups. It is distinct from `customer_profile` (registered commerce
+account) and `customer` (email-grain buyer definition). A contact may never have
+ordered, and a buyer may have no ESP profile.
 
-Consent semantics: `global_unsubscribed` is the person-level kill switch across every
-list, flow, and campaign for the merchant; `is_emailable` is its derived positive.
-List/segment membership (see the membership objects) is *targeting*, not consent —
-leaving a list does not flip `global_unsubscribed`, and a globally-unsubscribed
-contact can still appear in lists/segments. `consecutive_emails_unopened/_unclicked`
-are the ESP's deliverability decay counters — sunset-policy candidates before they
-become spam complaints.
+`global_unsubscribed` is the declared person-level suppression switch;
+`is_emailable` is `NOT global_unsubscribed`. This is suppression eligibility,
+not evidence of affirmative consent or permission to send. List/segment membership
+is targeting, not consent. Merchant policy, consent evidence, jurisdiction and
+send-time checks remain separate requirements. Engagement counters may inform a
+merchant's sunset policy; this catalog does not choose that policy.
 
 Gotchas:
 - Email engagement events also live in `uc_orders.emails[]` and

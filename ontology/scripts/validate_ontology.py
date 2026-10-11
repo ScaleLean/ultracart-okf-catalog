@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Validate the UltraCart Store Ontology.
 
-  --offline            structural checks + every property source expression resolved
-                       against OKF layer-1 field paths (no BigQuery, no auth)
+  --offline            selected-dataset historical schema checks (no BigQuery/auth);
+                       semantic types, scope and key uniqueness remain unverified
   --compiled CONFIG    compile with CONFIG, then bq dry-run every statement (needs auth)
 
 Exit 0 = pass.
@@ -14,23 +14,12 @@ import subprocess
 import sys
 
 import yaml
+from offline_contract import check_binding, DATASETS
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CATALOG = ROOT.parent / "concepts" / "tables_by_name"
 failures, warnings = [], []
-
-SQL_KEYWORDS = {
-    "case", "when", "then", "else", "end", "and", "or", "not", "in", "is", "null",
-    "true", "false", "coalesce", "array_length", "concat", "cast", "safe_cast", "date",
-    "datetime", "timestamp", "string", "integer", "int64", "numeric", "boolean", "bool",
-    "current_date", "current_datetime", "current_timestamp", "date_sub", "date_diff",
-    "date_trunc", "interval", "day", "month", "year", "to_hex", "to_base64", "from_hex",
-    "safe", "from_base64", "lower", "upper", "trim", "sha256", "if", "ifnull", "nullif",
-    "count", "countif", "sum", "min", "max", "avg", "row_number", "over", "partition",
-    "by", "order", "group", "select", "from", "where", "left", "join", "on", "using",
-    "as", "distinct", "unnest", "struct", "array", "like", "between", "extract",
-    "safe_divide", "regexp_contains", "split", "array_to_string", "exists",
-}
+CHECK_CONFIG = {"dataset": DATASETS}
 
 
 def fail(msg):
@@ -59,19 +48,6 @@ def front_matter(path):
         return None
 
 
-def field_paths_for(table: str):
-    doc = CATALOG / f"{table}.md"
-    if not doc.exists():
-        return None
-    return set(re.findall(r"^\| `([a-zA-Z0-9_.]+)` \|", doc.read_text(), re.MULTILINE))
-
-
-def column_refs(expr: str):
-    expr = re.sub(r"'[^']*'", "", expr)  # strip string literals
-    toks = set(re.findall(r"\b[a-zA-Z_][a-zA-Z0-9_.]*\b", expr))
-    return {t for t in toks if t.split(".")[0].lower() not in SQL_KEYWORDS and not t.isdigit()}
-
-
 def check_object(meta, path, all_objects):
     name = meta.get("object")
     rel = path.relative_to(ROOT)
@@ -79,41 +55,11 @@ def check_object(meta, path, all_objects):
         if req not in meta:
             fail(f"{rel}: missing '{req}'")
             return
-    binding = meta["source"].get("binding")
-    default_table = meta["source"].get("default_table", "")
-    m = re.search(r"\.([a-z0-9_]+)$", default_table)
-    catalog_table = binding if (CATALOG / f"{binding}.md").exists() else (m.group(1) if m else None)
-    paths = field_paths_for(catalog_table) if catalog_table else None
-    if paths is None:
-        fail(f"{rel}: bound table '{binding}' has no OKF catalog doc")
-        return
-    alias_map = {}
-    unnest = meta["source"].get("unnest")
-    if unnest:
-        alias_map[unnest["alias"]] = unnest["field"]
-        if unnest["field"] not in paths:
-            fail(f"{rel}: unnest field '{unnest['field']}' not in {catalog_table} field paths")
-    prop_names = set()
-    for p in meta["properties"]:
-        prop_names.add(p["name"])
-        # complex expressions (subqueries over arrays etc.) may declare refs: explicitly
-        explicit = p.get("refs")
-        for ref in (set(explicit) if explicit else column_refs(str(p["source"]))):
-            parts = ref.split(".")
-            if parts[0] in alias_map:
-                ref = ".".join([alias_map[parts[0]]] + parts[1:])
-            if ref not in paths:
-                fail(f"{rel}: property '{p['name']}' references '{ref}' — not a field path of {catalog_table}")
-    if len(prop_names) != len(meta["properties"]):
-        fail(f"{rel}: duplicate property names")
-    for k in meta["key"]["fields"]:
-        if k not in prop_names:
-            fail(f"{rel}: key field '{k}' is not an emitted property")
+    for error in check_binding(meta, CHECK_CONFIG, ROOT.parent):
+        fail(f"{rel}: {error}")
     for link in meta.get("links", []) or []:
         if link["to"] not in all_objects:
             fail(f"{rel}: link target '{link['to']}' is not a defined object")
-    for ef in ("excluded_fields",):
-        pass  # informational only
     return name
 
 
@@ -121,7 +67,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true")
     ap.add_argument("--compiled")
+    ap.add_argument("--config", help="Offline selected dataset bindings; no live access.")
     args = ap.parse_args()
+    global CHECK_CONFIG
+    if args.config:
+        CHECK_CONFIG = yaml.safe_load(pathlib.Path(args.config).read_text())
+    if args.offline and args.compiled:
+        ap.error("--offline cannot be combined with --compiled")
 
     object_files = sorted(ROOT.glob("objects/**/*.md"))
     metas = {}
@@ -136,6 +88,9 @@ def main():
             fail(f"duplicate URN {urn} ({f.name} and {urns[urn]})")
         urns[urn] = f.name
 
+    sys.path.insert(0, str(ROOT.parent / 'scripts'))
+    from build_knowledge_manifest import check_outputs, dependencies
+    from audit_agent_usability import has_wildcard_projection
     def_files = sorted(ROOT.glob("definitions/*.md"))
     def_names = set()
     for f in def_files:
@@ -143,11 +98,15 @@ def main():
         if meta and meta.get("type") == "Ontology Definition":
             def_names.add(meta["definition"])
 
+    families = set((front_matter(ROOT / 'identity/identity_spine.md') or {}).get('families', []))
+    for name, (meta, _) in metas.items():
+        if meta.get('key', {}).get('identity_family') not in families:
+            fail(f"{name}: unknown identity family")
+
     # link targets may be objects OR named definitions (both compile to views)
     for name, (meta, f) in metas.items():
         check_object(meta, f, set(metas) | def_names)
-    ok(f"{len(metas)} objects checked against OKF field paths")
-    all_props = {n: {p["name"] for p in m["properties"]} for n, (m, _) in metas.items()}
+    ok(f"{len(metas)} objects checked against dataset-specific historical schemas (structural only; scope/grain and derived types unverified)")
     n_defs = 0
     for f in def_files:
         meta = front_matter(f)
@@ -159,7 +118,18 @@ def main():
             if req not in meta:
                 fail(f"{rel}: missing '{req}'")
         sql = meta.get("sql", "")
-        for obj_ref in re.findall(r"\{\{ontology\}\}\.(\w+)", sql):
+        if has_wildcard_projection(sql):
+            fail(f"{rel}: wildcard projection forbidden")
+        try:
+            check_outputs(meta)
+        except ValueError as e:
+            fail(f"{rel}: {e}")
+        try:
+            refs = dependencies(meta)
+        except ValueError as e:
+            fail(f"{rel}: {e}")
+            refs = []
+        for obj_ref in refs:
             if obj_ref not in metas and not any(
                 d2 != f and (front_matter(d2) or {}).get("definition") == obj_ref for d2 in def_files
             ):

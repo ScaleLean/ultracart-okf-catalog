@@ -6,13 +6,15 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import hashlib
+from datetime import datetime, timezone
 import shutil
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
 
-GENERATED_AT = "2026-07-01T00:00:00Z"
+GENERATED_AT = None  # Set at the start of each build; never a schema-capture date.
 OKF_VERSION = "0.2"
 EXCLUDED_STANDARD_DATASETS = {"_".join(["ultracart", "dw", "work"])}
 
@@ -503,6 +505,8 @@ def concept_link(path: str, label: str) -> str:
 
 
 def build(args: argparse.Namespace) -> None:
+    global GENERATED_AT
+    GENERATED_AT = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     objects = [
         WarehouseObject(row["table_schema"], row["table_name"], row["table_type"])
         for row in read_csv(args.table_inventory)
@@ -551,12 +555,12 @@ def build(args: argparse.Namespace) -> None:
         by_name[obj.name].append(obj)
 
     write_root_index(out, objects, datasets, by_name)
-    write(out / "log.md", "# Change Log\n\n## 2026-07-01\n\n- Built the merchant-neutral UltraCart warehouse OKF catalog from metadata-only table, field-count, and field-path evidence.\n")
+    write(out / "log.md", f"# Change Log\n\n## {GENERATED_AT[:10]}\n\n- Built the merchant-neutral UltraCart warehouse OKF catalog from metadata-only table, field-count, and field-path evidence.\n")
     write_dataset_docs(out, objects_by_dataset, field_counts)
     write_table_docs(out, objects_by_dataset, field_counts, fields_by_object)
     write_canonical_docs(out, by_name, fields_by_table)
     write_reference_docs(out, objects, objects_by_dataset, field_counts, fields_by_table)
-    write_source_summary(out, objects, objects_by_dataset, field_counts, fields_by_table)
+    write_source_summary(out, objects, objects_by_dataset, field_counts, fields_by_table, args)
 
 
 def write_root_index(out: Path, objects: list[WarehouseObject], datasets: list[str], by_name: dict[str, list[WarehouseObject]]) -> None:
@@ -896,8 +900,18 @@ def write_source_summary(
     objects_by_dataset: dict[str, list[WarehouseObject]],
     field_counts: dict[tuple[str, str], dict[str, int]],
     fields_by_table: dict[str, list[dict[str, str]]],
+    args: argparse.Namespace,
 ) -> None:
     summary = {
+        "manifest_version": "1.0",
+        "source_captured_at": getattr(args, "source_captured_at", None),
+        "verified_at": None,
+        "verification_state": "unverified",
+        "structural_trust": "generated_not_validated",
+        "semantic_trust": "unverified",
+        "source_hashes": {key: hashlib.sha256(path.read_bytes()).hexdigest()
+                          for key in ("table_inventory", "field_counts", "field_paths")
+                          if (path := getattr(args, key, None))},
         "okf_version": OKF_VERSION,
         "generated_at": GENERATED_AT,
         "source_kind": "metadata_only_standard_catalog",
@@ -933,6 +947,7 @@ def main() -> int:
     parser.add_argument("--table-inventory", type=Path, required=True, help="CSV with table_schema, table_name, and table_type columns.")
     parser.add_argument("--field-counts", type=Path, help="Optional CSV with field path, array, and struct counts.")
     parser.add_argument("--field-paths", type=Path, help="Optional CSV with table_name, field_path, and data_type columns.")
+    parser.add_argument("--source-captured-at", help="Reported source capture timestamp (not verification); omit when unknown.")
     parser.add_argument("--out", type=Path, default=Path("okf/ultracart_warehouse"))
     args = parser.parse_args()
     build(args)

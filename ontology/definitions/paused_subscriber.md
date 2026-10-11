@@ -4,6 +4,10 @@ definition: paused_subscriber
 resource: "urn:ultracart:ontology:definition:paused_subscriber"
 version: 1
 summary: "A person whose subscription relationship is suspended but not ended: at least one auto-order container in subscription_state 'paused', and none active."
+outputs:
+  email_hash_b64: STRING
+  paused_container_count: INTEGER
+  example_auto_order_oid: INTEGER
 sql: |
   SELECT
     email_hash_b64,

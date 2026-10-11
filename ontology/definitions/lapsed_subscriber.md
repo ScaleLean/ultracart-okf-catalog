@@ -8,6 +8,10 @@ parameters:
   - name: lapsed_window_days
     default: 730
     meaning: "how far back an ended subscription still counts as 'lapsed' (reactivation-relevant) rather than gone; beyond it the person ages out of the pool"
+outputs:
+  email_hash_b64: STRING
+  last_ended_at: DATETIME
+  days_since_ended: INTEGER
 sql: |
   WITH per_email AS (
     SELECT
@@ -49,7 +53,8 @@ Edges worth knowing:
 - People with an ended container but `last_ended_at` NULL (data edge) are
   excluded rather than guessed at.
 - Win-back targeting must still cross `marketing_reachable` — lapsed and
-  globally-unsubscribed is a person you may NOT email.
+  globally-unsubscribed is excluded by that suppression model. Passing it does not
+  establish affirmative consent or permission to send.
 
 ## Change log
 - v1 (2026-07-06) — initial.

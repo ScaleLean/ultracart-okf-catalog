@@ -8,8 +8,71 @@ parameters:
   - name: include_channel_partner_orders
     default: false
     meaning: "when true, marketplace/call-center/reseller orders (channel_partner_code set) count as revenue too; default counts direct sales only"
+outputs:
+  order_id: STRING
+  email_hash_b64: STRING
+  merchant_id: STRING
+  order_date: DATE
+  order_ts: DATETIME
+  current_stage: STRING
+  payment_dts: DATETIME
+  payment_method: STRING
+  payment_status: STRING
+  is_test_order: BOOLEAN
+  channel_partner_code: STRING
+  storefront_host_name: STRING
+  customer_profile_oid: INTEGER
+  auto_order_oid: INTEGER
+  subtotal: NUMERIC
+  total: NUMERIC
+  tax: NUMERIC
+  shipping_charged: NUMERIC
+  refunded: NUMERIC
+  refund_dts: DATETIME
+  refund_reason: STRING
+  reject_dts: DATETIME
+  fraud_score: NUMERIC
+  currency_code: STRING
+  exchange_rate: NUMERIC
+  coupon_count: INTEGER
+  item_count: INTEGER
+  first_affiliate_oid: INTEGER
+  utm_source_last_click: STRING
+  utm_campaign_last_click: STRING
+  upsell_path_code: STRING
 sql: |
-  SELECT *
+  SELECT
+    order_id,
+    email_hash_b64,
+    merchant_id,
+    order_date,
+    order_ts,
+    current_stage,
+    payment_dts,
+    payment_method,
+    payment_status,
+    is_test_order,
+    channel_partner_code,
+    storefront_host_name,
+    customer_profile_oid,
+    auto_order_oid,
+    subtotal,
+    total,
+    tax,
+    shipping_charged,
+    refunded,
+    refund_dts,
+    refund_reason,
+    reject_dts,
+    fraud_score,
+    currency_code,
+    exchange_rate,
+    coupon_count,
+    item_count,
+    first_affiliate_oid,
+    utm_source_last_click,
+    utm_campaign_last_click,
+    upsell_path_code
   FROM {{ontology}}.order
   WHERE current_stage IN ('Shipping Department', 'Completed Order')
     AND payment_dts IS NOT NULL

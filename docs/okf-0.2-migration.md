@@ -80,7 +80,8 @@ python3 scripts/validate_upstream_okf.py /tmp/okf-reference okf/ultracart_wareho
 The wrapper checks the upstream commit before it imports the reference implementation.
 The local conformance check separately tests reserved index and log files.
 CI runs the same offline tests and the pinned upstream validator.
-CI also runs the full usability audit as a non-blocking step because of the known baseline defects below.
+At migration time the usability audit was non-blocking because of the baseline
+defects below. The later offline trustworthiness update makes it blocking.
 
 ## Baseline and remaining issues
 
@@ -90,8 +91,9 @@ The agent-usability audit failed on these existing SQL wildcard projections:
 - `ontology/definitions/repeat_customer.md`
 - `ontology/definitions/revenue_order.md`
 
-The same two audit failures remain. This migration does not change ontology semantics or weaken the audit.
-Review those projections in separate ontology work.
+Those failures were the migration baseline. The later offline trustworthiness
+update uses explicit projections, detects qualified wildcards and makes the audit
+blocking. See [offline trust](offline-trust.md) for current validation limits.
 
 The Notion governance page required sign-in. Its private instructions were unavailable.
 No Notion records, governance text, or ownership settings changed.

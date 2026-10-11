@@ -64,3 +64,12 @@ python3 scripts/dry_run_example_views.py \
 ```
 
 These examples intentionally separate order facts, item lines, attribution touches, sessions, and affiliate ledgers. Joining all of those grains in one query is the fastest path to double-counting.
+
+These examples and the separate ontology use different reporting conventions.
+`base_uc_orders` coalesces profile and billing email hashes; ontology `order` uses
+billing hash only. The daily commerce mart admits non-test base orders without
+`revenue_order`'s stage, payment and channel gates. Its totals and counts are not
+interchangeable with ontology customer/revenue metrics. Both are proposed
+conventions requiring merchant approval of identity, currency, timezone, refunds
+and period/cohort policies. Hashed keys are pseudonymous; they do not establish
+row-level privacy or permission to share output.

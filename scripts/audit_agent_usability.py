@@ -146,6 +146,34 @@ def check_table_docs(root: Path, summary: dict[str, object], errors: list[str]) 
     return len(table_docs)
 
 
+def has_wildcard_projection(sql: str) -> bool:
+    """Token scan of SELECT lists, ignoring literals/comments and aggregate stars.
+
+    This is a projection guard, not a general SQL parser or a PII verifier.
+    """
+    token_re = r"--[^\n]*|/\*.*?\*/|'(?:[^'\\]|\\.|'')*'|\"(?:[^\"\\]|\\.)*\"|`[^`]*`|[A-Za-z_][A-Za-z0-9_]*|[^\s]"
+    tokens = [t.lower() for t in re.findall(token_re, sql, re.DOTALL)
+              if not t.startswith(("--", "/*"))]
+    depth, selects = 0, {}
+    for i, token in enumerate(tokens):
+        if token == '(':
+            depth += 1
+        elif token == ')':
+            selects = {d: start for d, start in selects.items() if d < depth}
+            depth -= 1
+        elif token == 'select':
+            selects[depth] = i + 1
+        elif token == 'from':
+            selects.pop(depth, None)
+        elif token == '*' and depth in selects:
+            prefix = tokens[selects[depth]:i]
+            if prefix and prefix[0] in {'distinct', 'all'}:
+                prefix = prefix[1:]
+            if tokens[i - 1] in {'select', 'distinct', 'all', ',', '.'} or prefix in (['as', 'struct'], ['as', 'value']):
+                return True
+    return False
+
+
 def check_safety(root: Path, errors: list[str]) -> int:
     scanned = 0
     for path in sorted(root.rglob("*")):
@@ -155,11 +183,34 @@ def check_safety(root: Path, errors: list[str]) -> int:
             continue
         scanned += 1
         text = path.read_text(encoding="utf-8", errors="replace").lower()
+        term_text = text
+        if path.suffix.lower() == '.json':
+            try:
+                payload = json.loads(text)
+                if isinstance(payload, dict):
+                    # Only recognized, well-formed digest values are exempt from
+                    # substring matching. Paths, other fields and malformed hashes
+                    # remain scanned; sidecar integrity independently checks hashes.
+                    hashes = payload.get('source_hashes')
+                    if isinstance(hashes, dict):
+                        payload['source_hashes'] = {key: ('<sha256>' if isinstance(value, str)
+                            and re.fullmatch(r'[0-9a-f]{64}', value) else value)
+                            for key, value in hashes.items()}
+                    if isinstance(payload.get('source_commit'), str) and re.fullmatch(r'[0-9a-f]{40}', payload['source_commit']):
+                        payload['source_commit'] = '<git-commit>'
+                    term_text = json.dumps(payload)
+            except json.JSONDecodeError:
+                pass
         for term in FORBIDDEN_TERMS:
-            if term in text:
+            if term in term_text:
                 errors.append(f"{rel(root, path)}: forbidden merchant-specific term found")
                 break
-        if path.suffix.lower() != ".py" and "select *" in text:
+        sql_texts = [text]
+        if path.suffix.lower() == '.md':
+            parsed = parse_frontmatter(path)
+            if parsed and isinstance(parsed[0].get('sql'), str):
+                sql_texts.append(parsed[0]['sql'])
+        if path.suffix.lower() != ".py" and any(has_wildcard_projection(sql) for sql in sql_texts):
             errors.append(f"{rel(root, path)}: unsafe SELECT star pattern")
     return scanned
 
@@ -204,10 +255,10 @@ def write_report(path: Path, stats: dict[str, object], errors: list[str]) -> Non
         "All internal Markdown links resolve against repository-root GitHub paths.",
         "Every dataset-specific table page has definition, schema coverage, field paths, query pattern, and references.",
         "Expected agent entrypoints exist at root-level GitHub paths.",
-        "Safety scan found no merchant-specific forbidden terms or unsafe SELECT star examples.",
+        "Safety scan checks forbidden merchant terms and wildcard projections; it does not verify live safety.",
     ]
     for gate in gates:
-        lines.append(f"- {gate}")
+        lines.append(f"- {gate}" if not errors else f"- Not certified: {gate} See errors below.")
     lines.extend(["", "## Errors", ""])
     if errors:
         lines.extend(f"- {error}" for error in errors)
